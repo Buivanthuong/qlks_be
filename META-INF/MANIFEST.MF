@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: QLKS_CNPM
+Bundle-SymbolicName: QLKS;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.swt;bundle-version="3.106.3"
+Automatic-Module-Name: QLKS_CNPM
+Bundle-ClassPath: .,
+ swing2swt.jar
