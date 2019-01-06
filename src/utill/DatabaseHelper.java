@@ -11,11 +11,15 @@ public class DatabaseHelper {
 	// Connect MySQL.
 	public static Connection getMySQLConnection() throws SQLException,
 	ClassNotFoundException {
-		String hostName = "127.0.0.1";
-
-		String dbName = "qlksl";
-		String userName = "root";
-		String password = "10171961";
+		String hostName = "db4free.net";
+		String dbName = "qlks_db";
+		String userName = "thuongbv_1";
+		String password = "12345678";
+		
+//		String hostName = "127.0.0.1";
+//		String dbName = "qlksl";
+//		String userName = "root";
+//		String password = "10171961";
 
 		return getMySQLConnection(hostName, dbName, userName, password);
 	}
