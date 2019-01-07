@@ -45,21 +45,21 @@ public class Dialog {
 	 */
 	protected void createContents() {
 		shlThngBo = new Shell();
-		shlThngBo.setSize(300, 180);
+		shlThngBo.setSize(350, 205);
 		shlThngBo.setText("Thông báo");
 		shlThngBo.setLayout(null);
 		
 		Label lblNewLabel = new Label(shlThngBo, SWT.WRAP);
-		lblNewLabel.setBounds(10, 23, 280, 90);
+		lblNewLabel.setBounds(10, 23, 280, 80);
 		lblNewLabel.setText("Thông báo");
 		
-		Button btnThot = new Button(shlThngBo, SWT.NONE);
+		Button btnThot = new Button(shlThngBo, SWT.WRAP);
 		btnThot.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		btnThot.setBounds(196, 114, 94, 33);
+		btnThot.setBounds(210, 124, 94, 33);
 		btnThot.setText("Thoát");
 	}
 }

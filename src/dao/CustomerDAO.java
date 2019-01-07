@@ -290,7 +290,6 @@ public class CustomerDAO {
 			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
 				NUM_TYPE_CUSTOMER = rs.getInt(1);
 				NUM_CUSTOMER = rs.getInt(2);
-
 			}
 			if(NUM_TYPE_CUSTOMER > NUM_CUSTOMER) {
 				return true;
@@ -308,8 +307,6 @@ public class CustomerDAO {
 			// TODO: handle exception
 			ex.printStackTrace();
 		}
-
-
 
 		return false;
 	}

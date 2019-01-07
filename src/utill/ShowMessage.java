@@ -14,7 +14,7 @@ public static void ShowError(Shell parent ,String error, String title) {
 	// create a jframe
 		Shell dialog = new Shell(parent, SWT.DIALOG_TRIM
 	        | SWT.APPLICATION_MODAL);
-		dialog.setSize(300, 180);
+		dialog.setSize(330, 210);
 		dialog.setText("Thông báo");
 		dialog.setLayout(null);
 		
@@ -23,7 +23,7 @@ public static void ShowError(Shell parent ,String error, String title) {
 		lblNewLabel.setText(error);
 		
 		Button btnThot = new Button(dialog, SWT.NONE);
-		btnThot.setBounds(196, 114, 94, 33);
+		btnThot.setBounds(196, 134, 94, 33);
 		btnThot.setText("Đóng");
 		btnThot.addSelectionListener(new SelectionAdapter() {
 			@Override

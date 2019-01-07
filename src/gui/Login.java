@@ -71,21 +71,21 @@ public class Login {
 		
 		Label lblTnTiKhon = new Label(shell, SWT.NONE);
 		lblTnTiKhon.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		lblTnTiKhon.setBounds(63, 49, 107, 14);
+		lblTnTiKhon.setBounds(63, 49, 107, 19);
 		lblTnTiKhon.setText("Tên tài khoản");
 		
 		text = new Text(shell, SWT.BORDER);
 		text.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		text.setBounds(176, 46, 169, 19);
+		text.setBounds(176, 46, 169, 25);
 		
 		Label lblMtKhu = new Label(shell, SWT.NONE);
 		lblMtKhu.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		lblMtKhu.setText("Mật khẩu");
-		lblMtKhu.setBounds(63, 78, 107, 14);
+		lblMtKhu.setBounds(63, 78, 107, 19);
 		
 		text_1 = new Text(shell, SWT.BORDER | SWT.PASSWORD);
 		text_1.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		text_1.setBounds(176, 78, 169, 19);
+		text_1.setBounds(176, 78, 169, 25);
 		
 		Button btnGhiNhTi = new Button(shell, SWT.CHECK);
 		btnGhiNhTi.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
