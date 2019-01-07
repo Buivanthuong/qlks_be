@@ -116,7 +116,6 @@ public class Login {
 				};
 				
 			}
-
 			});
 
 		btnngNhp.setBounds(95, 143, 115, 40);
@@ -154,13 +153,10 @@ public class Login {
 
 		}else if(!UserBUS.LoginUser(user_name, password)) {
 			ShowMessage.ShowError(shell,"Tài khoản hoặc mật khẩu không chính xác!", "Lỗi dữ liệu");
-
 		}else {
 			return true;
 		}
 		
-		ShowMessage.ShowError(shell,"Lỗi hệ thống không thể lưu dữ liệu", "Lỗi hệ thống");
-
 		return false;
 	}
 }

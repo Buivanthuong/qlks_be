@@ -107,7 +107,7 @@ public class PrintPDF {
 		// t.setSpacing(4);
 		// t.setBorderWidth(1);
 
-		PdfPCell c1 = new PdfPCell(new Phrase("Ten"));
+		PdfPCell c1 = new PdfPCell(new Phrase("Tên"));
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		table.addCell(c1);
 
@@ -115,7 +115,7 @@ public class PrintPDF {
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		table.addCell(c1);
 
-		c1 = new PdfPCell(new Phrase("Ty le", catFont));
+		c1 = new PdfPCell(new Phrase("Tỷ le", catFont));
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		table.addCell(c1);
 		table.setHeaderRows(1);

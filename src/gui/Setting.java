@@ -149,8 +149,8 @@ public class Setting {
 		Label lblThu = new Label(composite, SWT.NONE);
 		lblThu.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		lblThu.setBounds(310, 83, 58, 14);
-		lblThu.setText("Thu/ngư�?i");
-
+		lblThu.setText("Thu/người");
+		
 		text_4 = new Text(composite, SWT.BORDER);
 		text_4.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		text_4.setBounds(368, 80, 32, 19);
@@ -204,7 +204,7 @@ public class Setting {
 
 		Label lblaCh = new Label(composite, SWT.NONE);
 		lblaCh.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		lblaCh.setText("�?ịa chỉ");
+		lblaCh.setText("Địa chỉ");
 		lblaCh.setBounds(10, 154, 153, 14);
 
 		text_10 = new Text(composite, SWT.BORDER);
@@ -305,7 +305,7 @@ public class Setting {
 			System.out.println("Done!");
 
 			// Tạo đối tượng .		 
-			String sql = String.format("Select NUM_TYPE_ROOM,NUM_TYPE_CUSTOMER,NUM_CUSTOMER_IN_ROOM,NUM_SURCHARGE_CUSTOMER,SURCHARGE_CUSTOMER,NUM_SURCHARGE_CUSTOMER_TYPE,HOTEL_NAME,ADDRESS From db_qlks.CONFIG" ) ;
+			String sql = String.format("Select NUM_TYPE_ROOM,NUM_TYPE_CUSTOMER,NUM_CUSTOMER_IN_ROOM,NUM_SURCHARGE_CUSTOMER,SURCHARGE_CUSTOMER,NUM_SURCHARGE_CUSTOMER_TYPE,HOTEL_NAME,ADDRESS From qlks_db.CONFIG" ) ;
 
 			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
 			ResultSet rs = DatabaseHelper.selectData(sql, connection);
@@ -421,7 +421,7 @@ public class Setting {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if(deleteUser(id)) {
-						ShowMessage.ShowError(shlThitLp,"Xoá dữ liệu thành công!", "Lỗi dữ liệu");
+						ShowMessage.ShowError(shlThitLp,"Xoá dữ liệu thành công!", "Thông báo");
 						selectUser();
 					}else {
 						ShowMessage.ShowError(shlThitLp,"Không xoá được!", "Lỗi dữ liệu");
@@ -454,6 +454,7 @@ public class Setting {
 			if(current_user_id == 0) {
 				if(!UserBUS.InsertUser(name, full_name, password)) {
 					ShowMessage.ShowError(shlThitLp,"Không thêm được,  tên đăng nhập đã tồn tại!", "Lỗi dữ liệu");
+					selectUser();
 				}
 			}else {
 				if(UserBUS.UpdateUser(id, name, full_name, password)) {
@@ -492,6 +493,8 @@ public class Setting {
 		}else {
 			if( UserBUS.InsertConfigUser(text.getText(),text_1.getText(),text_2.getText(),text_3.getText(),text_4.getText(),text_5.getText(),text_9.getText(),text_10.getText())){
 				current_user_id = 0;
+				ShowMessage.ShowError(shlThitLp,"Thay đổi dữ liệu thành công", "Thông báo");
+
 			} ;
 		}
 		return false;

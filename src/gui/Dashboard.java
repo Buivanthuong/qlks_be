@@ -283,7 +283,7 @@ public class Dashboard {
 		Label lblThiGianam = new Label(composite_2, SWT.NONE);
 		lblThiGianam.setFont(SWTResourceManager.getFont("Arial", 11, SWT.BOLD));
 		lblThiGianam.setBounds(615, 10, 186, 14);
-		lblThiGianam.setText("Th�?i gian: 12:20AM");
+		lblThiGianam.setText("Thời gian: 12:20AM");
 
 		Composite composite_3 = new Composite(shlQunLKhch, SWT.BORDER);
 		composite_3.setBounds(201, 192, 813, 376);
@@ -353,7 +353,7 @@ public class Dashboard {
 				Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
 				btnNewButton_4.setBounds(10 +(150 * size), 10 + (95 * row) , 145, 86);
 				btnNewButton_4.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 11, SWT.NORMAL));
-				btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\n�?ơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
+				btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\nĐơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
 				if(ob.getSTATUS_ROOM() == 2) {
 					btnNewButton_4.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 				}
@@ -381,7 +381,7 @@ public class Dashboard {
 				Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
 				btnNewButton_4.setBounds(10 +(150 * size), 10 + (95 * row) , 145, 86);
 				btnNewButton_4.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 11, SWT.NORMAL));
-				btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\n�?ơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
+				btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\nĐơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
 				if(ob.getSTATUS_ROOM() == 2) {
 					btnNewButton_4.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 				}

@@ -120,11 +120,11 @@ public class CreateReceiptOrder {
 
 		TableColumn tblclmnnGi = new TableColumn(table, SWT.NONE);
 		tblclmnnGi.setWidth(69);
-		tblclmnnGi.setText("�?ơn giá");
+		tblclmnnGi.setText("Đơn giá");
 
 		TableColumn tblclmnThnhTin = new TableColumn(table, SWT.NONE);
 		tblclmnThnhTin.setWidth(100);
-		tblclmnThnhTin.setText("Thành ti�?n");
+		tblclmnThnhTin.setText("Thành tiền");
 
 		TableColumn tableColumn_5 = new TableColumn(table, SWT.NONE);
 		tableColumn_5.setWidth(100);
@@ -210,7 +210,7 @@ public class CreateReceiptOrder {
 
 		lblTngTin = new Label(composite, SWT.NONE);
 		lblTngTin.setFont(SWTResourceManager.getFont("Arial", 11, SWT.BOLD));
-		lblTngTin.setText("Tổng ti�?n: 0");
+		lblTngTin.setText("Tổng tiền: 0");
 		lblTngTin.setBounds(261, 217, 159, 14);
 
 		text = new Text(composite, SWT.BORDER);
@@ -288,7 +288,7 @@ public class CreateReceiptOrder {
 		for (Order order : lsObs) {
 			sum+= order.getPRICE();
 		}
-		lblTngTin.setText("Tổng ti�?n: " + Utill.formatCurrency(sum));
+		lblTngTin.setText("Tổng tiền: " + Utill.formatCurrency(sum));
 
 		for (int i = 0; i < size; i++) {
 			final TableItem item = new TableItem(table, SWT.NONE);
@@ -328,10 +328,10 @@ public class CreateReceiptOrder {
 	}
 	private void saveReceiptOrder(int customer_id,int price ,String address, ArrayList<Order> ls) {
 		if(customer_id == 0) {
-			ShowMessage.ShowError(shlLpHon,"Vui lòng ch�?n khách hàng", "Lỗi dữ liệu");
+			ShowMessage.ShowError(shlLpHon,"Vui lòng chọn khách hàng", "Lỗi dữ liệu");
 
 		}else if(ls.size() == 0) {
-			ShowMessage.ShowError(shlLpHon,"Vui lòng ch�?n hoá đơn", "Lỗi dữ liệu");
+			ShowMessage.ShowError(shlLpHon,"Vui lòng chọn hoá đơn", "Lỗi dữ liệu");
 
 		}else {
 			

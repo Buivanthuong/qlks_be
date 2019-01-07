@@ -93,7 +93,7 @@ public class ManagerRoomType {
 
 		TableColumn tblclmnnGi = new TableColumn(table, SWT.NONE);
 		tblclmnnGi.setWidth(100);
-		tblclmnnGi.setText("�?ơn giá");
+		tblclmnnGi.setText("Đơn giá");
 
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn.setWidth(100);
@@ -114,7 +114,7 @@ public class ManagerRoomType {
 
 		Label lblnGi = new Label(composite, SWT.NONE);
 		lblnGi.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		lblnGi.setText("�?ơn giá");
+		lblnGi.setText("Đơn giá");
 		lblnGi.setBounds(10, 39, 59, 14);
 
 		Label lblSLoiPhng = new Label(composite, SWT.NONE);

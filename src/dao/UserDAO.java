@@ -70,7 +70,7 @@ public class UserDAO {
 			System.out.println("Get connection " + connection);
 			System.out.println("Done!");
 	 
-			String sql = String.format("Insert into USER (FULL_NAME, USER_NAME,PASSWORD,STATUS) Values( '%s','%s','%s',1)",full_name,name,password + "" ) ;
+			String sql = String.format("Insert into USER (FULL_NAME, USER_NAME,PASSWORD,STATUS) Values( N'%s','%s','%s',1)",full_name,name,password + "" ) ;
 			String sql2 = String.format("SELECT * FROM USER WHERE USER_NAME = '%s'",name ) ;
 
 			ResultSet rss = DatabaseHelper.selectData(sql2, connection);
@@ -136,7 +136,7 @@ public class UserDAO {
 			connection = ConnectionUtils.getMyConnection();
 			System.out.println("Get connection " + connection);
 			System.out.println("Done!");
-			String sql = String.format("UPDATE CONFIG set NUM_TYPE_ROOM = '%s',NUM_TYPE_CUSTOMER = '%s',NUM_CUSTOMER_IN_ROOM = '%s',NUM_SURCHARGE_CUSTOMER = '%s',SURCHARGE_CUSTOMER = '%s',NUM_SURCHARGE_CUSTOMER_TYPE = '%s',HOTEL_NAME = '%s',ADDRESS = '%s'",
+			String sql = String.format("UPDATE CONFIG set NUM_TYPE_ROOM = '%s',NUM_TYPE_CUSTOMER = '%s',NUM_CUSTOMER_IN_ROOM = '%s',NUM_SURCHARGE_CUSTOMER = '%s',SURCHARGE_CUSTOMER = '%s',NUM_SURCHARGE_CUSTOMER_TYPE = '%s',HOTEL_NAME = N'%s',ADDRESS = N'D%s'",
 					ob.getNUM_TYPE_ROOM(),
 					ob.getNUM_TYPE_CUSTOMER(),
 					ob.getNUM_CUSTOMER_IN_ROOM(),
@@ -177,7 +177,7 @@ public class UserDAO {
 			System.out.println("Done!");
 
 			// Tạo đối tượng .		 
-			String sql = String.format("Select HOTEL_NAME, ADDRESS,CONFIG.NUM_TYPE_CUSTOMER ,(Select COUNT(TYPE_CUSTOMER.ID) From TYPE_CUSTOMER WHERE STATUS = 1 ) as NUM_CUSTOMER,CONFIG.NUM_TYPE_ROOM ,(Select COUNT(TYPE_ROOM.ID) From TYPE_ROOM WHERE STATUS = 1 ) as NUM_ROOM From qlks_db.CONFIG" ) ;
+			String sql = String.format("Select HOTEL_NAME, ADDRESS,CONFIG.NUM_TYPE_CUSTOMER ,(Select COUNT(TYPE_CUSTOMER.ID) From TYPE_CUSTOMER WHERE STATUS = 1 ) as NUM_CUSTOMER,CONFIG.NUM_TYPE_ROOM ,(Select COUNT(TYPE_ROOM.ID) From TYPE_ROOM WHERE STATUS = 1 ) as NUM_ROOM, NUM_CUSTOMER_IN_ROOM, NUM_SURCHARGE_CUSTOMER,NUM_SURCHARGE_CUSTOMER_TYPE,SURCHARGE_CUSTOMER From qlks_db.CONFIG" ) ;
 
 			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
 			ResultSet rs = DatabaseHelper.selectData(sql, connection);
@@ -188,8 +188,13 @@ public class UserDAO {
 				cf.setHOTEL_NAME(rs.getString(1));
 				cf.setNUM_TYPE_CUSTOMER(rs.getInt(3));
 				cf.setNUM_OF_TYPE_CUSTOMER(rs.getInt(4));
-				cf.setNUM_TYPE_ROOM(rs.getInt(3));
-				cf.setNUM_OF_TYPE_ROOM(rs.getInt(4));
+				cf.setNUM_TYPE_ROOM(rs.getInt(5));
+				cf.setNUM_OF_TYPE_ROOM(rs.getInt(6));
+				cf.setNUM_CUSTOMER_IN_ROOM(rs.getInt(7));
+				cf.setNUM_SURCHARGE_CUSTOMER(rs.getInt(8));
+				cf.setNUM_SURCHARGE_CUSTOMER_TYPE(rs.getInt(9));
+				cf.setSURCHARGE_CUSTOMER(rs.getInt(10));
+				
 			}
 			// Close connection
 			connection.close();

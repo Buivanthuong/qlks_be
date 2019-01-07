@@ -19,7 +19,7 @@ public class DatabaseHelper {
 		String hostName = "127.0.0.1";
 		String dbName = "qlks_db";
 		String userName = "root";
-		String password = "123456";
+		String password = "";
 
 		return getMySQLConnection(hostName, dbName, userName, password);
 	}
@@ -31,10 +31,11 @@ public class DatabaseHelper {
 		Class.forName("com.mysql.jdbc.Driver");
 
 		// URL Connection
-		String connectionURL = "jdbc:mysql://" + hostName + ":3306/" + dbName;
+		String connectionURL = "jdbc:mysql://" + hostName + ":3306/" + dbName+"?useUnicode=true&characterEncoding=UTF-8";
 
 		Connection conn = DriverManager.getConnection(connectionURL, userName,
 				password);
+
 		return conn;
 	}
 	public static int installData(String sql,Connection connection) throws SQLException {

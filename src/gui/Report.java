@@ -145,7 +145,7 @@ public class Report {
 			}
 		});
 		btnng.setBounds(206, 187, 94, 28);
-		btnng.setText("�?óng");
+		btnng.setText("Đóng");
 		
 		TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
 		tbtmNewItem.setText("Mật độ sử dụng phòng");
@@ -210,7 +210,7 @@ public class Report {
 				shlLpBoCo.close();
 			}
 		});
-		button_1.setText("�?óng");
+		button_1.setText("Đóng");
 		button_1.setBounds(206, 189, 94, 28);
 		combo.addSelectionListener(new SelectionListener() {
 
@@ -251,6 +251,9 @@ public class Report {
 		lsb2 = RoomBUS.selectRoom(month);
 		int size = lsb2.size();
 		double sum = 0;
+		for ( Room room : lsb2) {
+			sum += room.getPRICE();
+		}
 		
 		for (int i = 0; i < size; i++) {
 			final TableItem item = new TableItem(table_1, SWT.NONE);
@@ -266,7 +269,9 @@ public class Report {
 		lsb = RoomBUS.selectTyeRoom(month);
 		int size = lsb.size();
 		double sum = 0;
-		
+		for ( TypeRoom room : lsb) {
+			sum += room.getPRICE();
+		}
 		for (int i = 0; i < size; i++) {
 			final TableItem item = new TableItem(table, SWT.NONE);
 			item.setText(new String[] {(i + 1)+"",lsb.get(i).getNAME() ,Utill.formatCurrency(lsb.get(i).getPRICE()) + "",String.format("%10.1f",(lsb.get(i).getPRICE()/sum  * 100)) + "%" });

@@ -445,6 +445,7 @@ public class RoomDAO {
 					"	qlks_db.ROOM.ID = qlks_db.ORDER.ROOM_ID" + 
 					"    and" + 
 					"    qlks_db.TYPE_ROOM.ID = qlks_db.ROOM.TYPE_ROOM_ID" +
+					"    and qlks_db.ORDER.RECEIPT_ID is not null" + 
 					"    and MONTH(qlks_db.ORDER.DATE_ORDER) = %s"+
 					" group by TYPE_ROOM.ID;", month) ;
 

@@ -190,7 +190,7 @@ public class ManagerRoom {
 			ShowMessage.ShowError(shlQunLPhng,"Vui lòng nhập tên phòng", "Lỗi dữ liệu");
 
 		}else if(id_type == 0) {
-			ShowMessage.ShowError(shlQunLPhng,"Vui lòng ch�?n loại phòng", "Lỗi dữ liệu");
+			ShowMessage.ShowError(shlQunLPhng,"Vui lòng chọn loại phòng", "Lỗi dữ liệu");
 
 		}else {
 			if(RoomBUS.saveRoom( current_id , name, note,  id_type)){

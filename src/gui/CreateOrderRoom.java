@@ -35,7 +35,7 @@ public class CreateOrderRoom {
 	int price;
 	Config config ;
 	int current_customer_id;
-	private ArrayList<Customer> lsObs ;
+	private ArrayList<Customer> lsObs = new ArrayList<Customer>() ;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -258,7 +258,7 @@ public class CreateOrderRoom {
 	ArrayList<Room> lsOb_r;
 	
 	private void selectRoom() {
-		lsOb_r = RoomBUS.selectRoom();
+		lsOb_r = RoomBUS.selectRoom(1,"");
 		int size = lsOb_r.size();
 		String[] strings = new String[size];
 		for (int i = 0; i < size; i++) {
@@ -301,8 +301,11 @@ public class CreateOrderRoom {
 					if(cm.getID() == lsOb_c.get(combo.getSelectionIndex()).getID()) {
 						sum = 1;
 					};
-				}if(sum == 0 && lsObs.size() < config.getNUM_CUSTOMER_IN_ROOM()) {
+				}
+				if(sum == 0 && lsObs.size() < config.getNUM_CUSTOMER_IN_ROOM()) {
 					lsObs.add(lsOb_c.get(combo.getSelectionIndex()));
+				}else if(sum!=0){
+					ShowMessage.ShowError(shlLpPhiuThu,"Khách hàng đã có!", "Lỗi dữ liệu");
 				}else {
 					ShowMessage.ShowError(shlLpPhiuThu,"Quá số khách tối đa trong 1 phòng !", "Lỗi dữ liệu");
 				}
