@@ -156,7 +156,7 @@ public class UserDAO {
 		
 		return false;
 	}
-	public static boolean selectConfig() {
+	public static Config selectConfig() {
 		//connections
 		Config cf = new Config();
 		Connection connection;
@@ -165,7 +165,7 @@ public class UserDAO {
 			System.out.println("Done!");
 
 			// Tạo đối tượng .		 
-			String sql = String.format("Select HOTEL_NAME, ADDRESS From db_qlks.CONFIG" ) ;
+			String sql = String.format("Select HOTEL_NAME, ADDRESS,CONFIG.NUM_TYPE_CUSTOMER ,(Select COUNT(TYPE_CUSTOMER.ID) From TYPE_CUSTOMER WHERE STATUS = 1 ) as NUM_CUSTOMER,CONFIG.NUM_TYPE_ROOM ,(Select COUNT(TYPE_ROOM.ID) From TYPE_ROOM WHERE STATUS = 1 ) as NUM_ROOM From db_qlks.CONFIG" ) ;
 
 			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
 			ResultSet rs = DatabaseHelper.selectData(sql, connection);
@@ -174,6 +174,10 @@ public class UserDAO {
 			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
 				cf.setADDRESS(rs.getString(2));
 				cf.setHOTEL_NAME(rs.getString(1));
+				cf.setNUM_TYPE_CUSTOMER(rs.getInt(3));
+				cf.setNUM_OF_TYPE_CUSTOMER(rs.getInt(4));
+				cf.setNUM_TYPE_ROOM(rs.getInt(3));
+				cf.setNUM_OF_TYPE_ROOM(rs.getInt(4));
 			}
 			// Close connection
 			connection.close();
@@ -188,7 +192,7 @@ public class UserDAO {
 
 
 
-		return false;
+		return cf;
 	}
 	public static boolean selectIsInstall() {
 

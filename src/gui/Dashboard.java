@@ -2,11 +2,6 @@ package gui;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableItem;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,24 +11,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+
+import bus.RoomBUS;
+import bus.UserBUS;
+
 import org.eclipse.swt.widgets.Button;
 
+import dto.Config;
 import dto.Room;
 import dto.User;
-import utill.ConnectionUtils;
-import utill.DatabaseHelper;
 import utill.SWTResourceManager;
-import utill.ShowMessage;
 import utill.Utill;
 
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 
 public class Dashboard {
@@ -104,7 +98,7 @@ public class Dashboard {
 		lblaCh = new Label(composite, SWT.NONE);
 		lblaCh.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		lblaCh.setBounds(10, 46, 471, 14);
-		lblaCh.setText("�?ịa chỉ: 123 Tô hiến thành, Quận 1, TP.HCM");
+		lblaCh.setText("Địa chỉ: 123 Tô hiến thành, Quận 1, TP.HCM");
 
 		lblNhnVinBi = new Label(composite, SWT.NONE);
 		lblNhnVinBi.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
@@ -303,7 +297,13 @@ public class Dashboard {
 		scrolledComposite.setContent(composite_4);
 		scrolledComposite.setMinSize(composite_4.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		selectRoom();
-		selectConfig() ;
+
+
+		Config cf =UserBUS.selectConfig();
+		lblaCh.setText("Địa chỉ: "+cf.getADDRESS());
+		lblNewLabel.setText(cf.getHOTEL_NAME());
+		lblNhnVinBi.setText("Nhân viên: "+  Utill.GetSaveUser().getFULL_NAME());
+		
 
 		Thread updateThread = new Thread() {
 			public void run() {
@@ -319,7 +319,7 @@ public class Dashboard {
 									shlQunLKhch.close();
 								}else {
 									selectRoom();
-									lblThiGianam.setText("Th�?i gian:" + new SimpleDateFormat(" HH:mm:ss dd/MM/YYYY").format(new Date()));
+									lblThiGianam.setText("Thời gian:" + new SimpleDateFormat(" HH:mm:ss dd/MM/YYYY").format(new Date()));
 								}
 							}
 						});
@@ -335,153 +335,60 @@ public class Dashboard {
 		updateThread.setDaemon(true);
 		updateThread.start();
 	}
-	private boolean selectRoom() {
+	private void selectRoom() {
 		for (Control control : composite_4.getChildren()) {
 			control.dispose();
 		}
-		//connections
-		Connection connection;
-		try {
-			connection = ConnectionUtils.getMyConnection();
-			System.out.println("Get connection " + connection);
-			System.out.println("Done!");
-			String where = "";
-			if(STATUS == 3) {
-				where = " and ROOM.NAME like '%"+text.getText()+"%'";
+		String tx = text.getText();
+		ArrayList<Room> lsOb = RoomBUS.selectRoom( STATUS, tx );
+		int size = 0;
+		int row = -1;
+		for (Room ob : lsOb) {
+			if(STATUS == 0 || STATUS ==3) {
+				if(size % 5 == 0) {
+					row ++;
+					size = 0;
+				}
+				Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
+				btnNewButton_4.setBounds(10 +(150 * size), 10 + (95 * row) , 145, 86);
+				btnNewButton_4.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 11, SWT.NORMAL));
+				btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\n�?ơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
+				if(ob.getSTATUS_ROOM() == 2) {
+					btnNewButton_4.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+				}
+				size ++;
 			}
-			// Tạo đối tượng .		 
-			String sql = ("Select ROOM.NAME, NOTE,ROOM.ID,TYPE_ROOM.NAME as TYPE_ROOM_NAME,TYPE_ROOM_ID,PRICE, (Select 2 from db_qlks.ORDER where ROOM.ID  = db_qlks.ORDER.ROOM_ID  and RECEIPT_ID IS NULL GROUP BY ROOM.ID  )  AS STATUS  From ROOM , TYPE_ROOM WHERE ROOM.STATUS = 1 and ROOM.TYPE_ROOM_ID = TYPE_ROOM.ID" + where ) ;
-
-			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-			ResultSet rs = DatabaseHelper.selectData(sql, connection);
-			ArrayList<Room> lsOb = new ArrayList<>();
-			int size = 0;
-			int row = -1;
-			// Duyệt trên kết quả trả v�?.
-			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
-				if(STATUS == 0 || STATUS ==3) {
-
-					Room ob = new Room();
-					ob.setPRICE(rs.getInt(6));
-					ob.setTYPE_ROOM_ID(rs.getInt(5));
-					ob.setTYPE(rs.getString(4));
-					ob.setID(rs.getInt(3));
-					ob.setNAME(rs.getString(1));
-					ob.setNOTE(rs.getString(2));
-					ob.setSTATUS_ROOM(rs.getInt(7));
-					lsOb.add(ob);
-					if(size % 5 == 0) {
-						row ++;
-						size = 0;
-					}
-					Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
-					btnNewButton_4.setBounds(10 +(150 * size), 10 + (95 * row) , 145, 86);
-					btnNewButton_4.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 11, SWT.NORMAL));
-					btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\n�?ơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
-					if(ob.getSTATUS_ROOM() == 2) {
-						btnNewButton_4.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-					}
-					size ++;
+			if(STATUS == 1 && ob.getSTATUS_ROOM() == 0) {
+				if(size % 5 == 0) {
+					row ++;
+					size = 0;
 				}
-				if(STATUS == 1 && rs.getInt(7) == 0) {
-					Room ob = new Room();
-					ob.setPRICE(rs.getInt(6));
-					ob.setTYPE_ROOM_ID(rs.getInt(5));
-					ob.setTYPE(rs.getString(4));
-					ob.setID(rs.getInt(3));
-					ob.setNAME(rs.getString(1));
-					ob.setNOTE(rs.getString(2));
-					ob.setSTATUS_ROOM(rs.getInt(7));
-					lsOb.add(ob);
-					if(size % 5 == 0) {
-						row ++;
-						size = 0;
-					}
-					Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
-					btnNewButton_4.setBounds(10 +(150 * size), 10 + (95 * row) , 145, 86);
-					btnNewButton_4.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 11, SWT.NORMAL));
-					btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\n�?ơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
-					if(ob.getSTATUS_ROOM() == 2) {
-						btnNewButton_4.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-					}
-					size ++;
+				Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
+				btnNewButton_4.setBounds(10 +(150 * size), 10 + (95 * row) , 145, 86);
+				btnNewButton_4.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 11, SWT.NORMAL));
+				btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\nĐơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
+				if(ob.getSTATUS_ROOM() == 2) {
+					btnNewButton_4.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 				}
-				if(STATUS == 2 && rs.getInt(7) == 2) {
-					Room ob = new Room();
-					ob.setPRICE(rs.getInt(6));
-					ob.setTYPE_ROOM_ID(rs.getInt(5));
-					ob.setTYPE(rs.getString(4));
-					ob.setID(rs.getInt(3));
-					ob.setNAME(rs.getString(1));
-					ob.setNOTE(rs.getString(2));
-					ob.setSTATUS_ROOM(rs.getInt(7));
-					lsOb.add(ob);
-					if(size % 5 == 0) {
-						row ++;
-						size = 0;
-					}
-					Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
-					btnNewButton_4.setBounds(10 +(150 * size), 10 + (95 * row) , 145, 86);
-					btnNewButton_4.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 11, SWT.NORMAL));
-					btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\n�?ơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
-					if(ob.getSTATUS_ROOM() == 2) {
-						btnNewButton_4.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-					}
-					size ++;
-				}
+				size ++;
 			}
-
-
-			// Close connection
-			connection.close();
-
-		} catch (SQLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+			if(STATUS == 2 && ob.getSTATUS_ROOM() == 2) {
+				if(size % 5 == 0) {
+					row ++;
+					size = 0;
+				}
+				Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
+				btnNewButton_4.setBounds(10 +(150 * size), 10 + (95 * row) , 145, 86);
+				btnNewButton_4.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 11, SWT.NORMAL));
+				btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\n�?ơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
+				if(ob.getSTATUS_ROOM() == 2) {
+					btnNewButton_4.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+				}
+				size ++;
+			}
 		}
-
-
-
-		return false;
-	}
-	private boolean selectConfig() {
-		//connections
-		Connection connection;
-		try {
-			connection = ConnectionUtils.getMyConnection();
-			System.out.println("Done!");
-
-			// Tạo đối tượng .		 
-			String sql = String.format("Select HOTEL_NAME, ADDRESS From db_qlks.CONFIG" ) ;
-
-			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-			ResultSet rs = DatabaseHelper.selectData(sql, connection);
-
-			// Duyệt trên kết quả trả v�?.
-			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
-				lblaCh.setText("�?ịa chỉ: "+rs.getString(2));
-				lblNewLabel.setText(rs.getString(1));
-			}
-			lblNhnVinBi.setText("Nhân viên: "+  Utill.GetSaveUser().getFULL_NAME());
-			
-
-			// Close connection
-			connection.close();
-
-		} catch (SQLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		}
-
-
-
-		return false;
+	
+		
 	}
 
 }

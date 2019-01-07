@@ -4,6 +4,10 @@ public class Config {
 	private int ID;
 	private int NUM_TYPE_ROOM;
 	private int NUM_TYPE_CUSTOMER;
+
+	private int NUM_OF_TYPE_ROOM;
+	private int NUM_OF_TYPE_CUSTOMER;
+	
 	private int NUM_CUSTOMER_IN_ROOM;
 	private int NUM_SURCHARGE_CUSTOMER;
 	private double SURCHARGE_CUSTOMER;
@@ -11,6 +15,18 @@ public class Config {
 	private String HOTEL_NAME;
 	private String ADDRESS;
 	
+	public int getNUM_OF_TYPE_ROOM() {
+		return NUM_OF_TYPE_ROOM;
+	}
+	public void setNUM_OF_TYPE_ROOM(int nUM_OF_TYPE_ROOM) {
+		NUM_OF_TYPE_ROOM = nUM_OF_TYPE_ROOM;
+	}
+	public int getNUM_OF_TYPE_CUSTOMER() {
+		return NUM_OF_TYPE_CUSTOMER;
+	}
+	public void setNUM_OF_TYPE_CUSTOMER(int nUM_OF_TYPE_CUSTOMER) {
+		NUM_OF_TYPE_CUSTOMER = nUM_OF_TYPE_CUSTOMER;
+	}
 	public int getNUM_SURCHARGE_CUSTOMER() {
 		return NUM_SURCHARGE_CUSTOMER;
 	}

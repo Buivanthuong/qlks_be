@@ -4,13 +4,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -25,11 +21,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-import utill.ConnectionUtils;
-import utill.DatabaseHelper;
+import bus.RoomBUS;
 import utill.PrintPDF;
 import utill.SWTResourceManager;
-import utill.ShowMessage;
 import utill.Utill;
 import dto.Room;
 import dto.TypeRoom;
@@ -245,125 +239,39 @@ public class Report {
 	}
 	protected void printPFDType() {
 		// TODO Auto-generated method stub
-		PrintPDF.PrintFilePDF("Doanh thu theo loại phòng","Danh sách báo cáo",shlLpBoCo, lsb,new ArrayList());
+		PrintPDF.PrintFilePDF("Doanh thu theo loại phòng","Danh sách báo cáo",shlLpBoCo, lsb,new ArrayList<Room>());
 	}
 	protected void printPFDRoom() {
 		// TODO Auto-generated method stub
-		PrintPDF.PrintFilePDF("Doanh thu theo loại phòng","Danh sách báo cáo",shlLpBoCo, new ArrayList(),lsb2);
+		PrintPDF.PrintFilePDF("Doanh thu theo loại phòng","Danh sách báo cáo",shlLpBoCo, new ArrayList<TypeRoom>(),lsb2);
 	}
 	ArrayList<Room> lsb2;
 	private boolean selectRoom(int month) {
 		table_1.removeAll();
-		//connections
-		Connection connection;
-		try {
-			connection = ConnectionUtils.getMyConnection();
-			System.out.println("Get connection " + connection);
-			System.out.println("Done!");
+		lsb2 = RoomBUS.selectRoom(month);
+		int size = lsb2.size();
+		double sum = 0;
+		
+		for (int i = 0; i < size; i++) {
+			final TableItem item = new TableItem(table_1, SWT.NONE);
+			item.setText(new String[] {(i + 1)+"",lsb2.get(i).getNAME() ,Utill.formatCurrency(lsb2.get(i).getPRICE()) + "",String.format("%10.1f",(lsb2.get(i).getPRICE()/sum  * 100)) + "%" });
 
-			// Tạo đối tượng .		 
-			String sql = String.format("SELECT db_qlks.ROOM.ID ,db_qlks.ROOM.NAME , SUM(db_qlks.ORDER.PRICE) as PRICE\n" + 
-					"	FROM db_qlks.ROOM , db_qlks.ORDER" + 
-					" Where " + 
-					"	 db_qlks.ROOM.ID = db_qlks.ORDER.ROOM_ID" + 
-					"    and db_qlks.ORDER.RECEIPT_ID is not null" + 
-					"    and  MONTH(db_qlks.ORDER.DATE_ORDER) = %s" + 
-					" group by db_qlks.ROOM.ID,db_qlks.ROOM.NAME" + 
-					" " ,month) ;
-
-			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-			ResultSet rs = DatabaseHelper.selectData(sql, connection);
-			lsb2 = new ArrayList<>();
-			int size = 0;
-			double sum = 0;
-			// Duyệt trên kết quả trả v�?.
-			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
-				Room ob = new Room();
-				ob.setPRICE(rs.getInt(3));
-				ob.setID(rs.getInt(1));
-				ob.setNAME(rs.getString(2));
-				sum+=rs.getInt(3);
-				lsb2.add(ob);
-				size ++;
-
-			}
-
-			for (int i = 0; i < size; i++) {
-				final TableItem item = new TableItem(table_1, SWT.NONE);
-				item.setText(new String[] {(i + 1)+"",lsb2.get(i).getNAME() ,Utill.formatCurrency(lsb2.get(i).getPRICE()) + "",String.format("%10.1f",(lsb2.get(i).getPRICE()/sum  * 100)) + "%" });
-
-			}
-
-			// Close connection
-			connection.close();
-
-		} catch (SQLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
 		}
-
-
-
 		return false;
 	}
 	ArrayList<TypeRoom> lsb;
 	private boolean selectTyeRoom(int month) {
+		
 		table.removeAll();
-		//connections
-		Connection connection;
-		try {
-			connection = ConnectionUtils.getMyConnection();
-			System.out.println("Get connection " + connection);
-			System.out.println("Done!");
-
-			// Tạo đối tượng .		 
-			String sql = String.format("SELECT db_qlks.TYPE_ROOM.ID ,db_qlks.TYPE_ROOM.NAME , SUM(db_qlks.ORDER.PRICE) as PRICE FROM db_qlks.TYPE_ROOM, db_qlks.ORDER, db_qlks.ROOM\n" + 
-					"Where" + 
-					"	db_qlks.ROOM.ID = db_qlks.ORDER.ROOM_ID" + 
-					"    and" + 
-					"    db_qlks.TYPE_ROOM.ID = db_qlks.ROOM.TYPE_ROOM_ID" +
-					"    and MONTH(db_qlks.ORDER.DATE_ORDER) = %s"+
-					" group by TYPE_ROOM.ID;", month) ;
-
-			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-			ResultSet rs = DatabaseHelper.selectData(sql, connection);
-			lsb = new ArrayList<>();
-			int size = 0;
-			double sum = 0;
-
-			// Duyệt trên kết quả trả v�?.
-			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
-				TypeRoom ob = new TypeRoom();
-				ob.setPRICE(rs.getInt(3));
-				ob.setID(rs.getInt(1));
-				ob.setNAME(rs.getString(2));
-				sum +=rs.getInt(3);
-				lsb.add(ob);
-				size ++;
-
-			}
-			
-			for (int i = 0; i < size; i++) {
-				final TableItem item = new TableItem(table, SWT.NONE);
-				item.setText(new String[] {(i + 1)+"",lsb.get(i).getNAME() ,Utill.formatCurrency(lsb.get(i).getPRICE()) + "",String.format("%10.1f",(lsb.get(i).getPRICE()/sum  * 100)) + "%" });
-			}
-
-			// Close connection
-			connection.close();
-
-		} catch (SQLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+		lsb = RoomBUS.selectTyeRoom(month);
+		int size = lsb.size();
+		double sum = 0;
+		
+		for (int i = 0; i < size; i++) {
+			final TableItem item = new TableItem(table, SWT.NONE);
+			item.setText(new String[] {(i + 1)+"",lsb.get(i).getNAME() ,Utill.formatCurrency(lsb.get(i).getPRICE()) + "",String.format("%10.1f",(lsb.get(i).getPRICE()/sum  * 100)) + "%" });
 		}
-
-
-
+		
 		return false;
 	}
 }

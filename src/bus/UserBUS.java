@@ -1,5 +1,7 @@
 package bus;
 
+import java.util.ArrayList;
+
 import dao.UserDAO;
 import dto.Config;
 import dto.User;
@@ -50,5 +52,14 @@ public class UserBUS {
 		}
 		
 		return false;
+	}
+	public static Config selectConfig() {
+		return UserDAO.selectConfig();
+	}
+	public static boolean deleteUser(int id) {
+		return UserDAO.deleteUser(id);
+	}
+	public static ArrayList<User> selectUser(){
+		return UserDAO.selectUser();
 	}
 }

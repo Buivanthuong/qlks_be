@@ -1,8 +1,6 @@
 package gui;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
@@ -11,16 +9,16 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.*;
-import org.eclipse.swt.events.*;
+
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
-import utill.ConnectionUtils;
-import utill.DatabaseHelper;
+import bus.CustomerBUS;
+import bus.OrderBUS;
+import bus.RoomBUS;
+import bus.UserBUS;
 import utill.SWTResourceManager;
 import utill.ShowMessage;
-import utill.Utill;
 import dto.Config;
 import dto.Customer;
 import dto.Room;
@@ -37,7 +35,7 @@ public class CreateOrderRoom {
 	int price;
 	Config config ;
 	int current_customer_id;
-	private ArrayList<Customer> lsObs = new ArrayList();
+	private ArrayList<Customer> lsObs ;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -126,7 +124,7 @@ public class CreateOrderRoom {
 
 		TableColumn tblclmnaCh = new TableColumn(table, SWT.NONE);
 		tblclmnaCh.setWidth(100);
-		tblclmnaCh.setText("�?ịa chỉ");
+		tblclmnaCh.setText("Địa chỉ");
 
 		TableColumn tblclmnXo = new TableColumn(table, SWT.NONE);
 		tblclmnXo.setWidth(100);
@@ -228,7 +226,7 @@ public class CreateOrderRoom {
 			    dialog.setLocation(x, y);
 				
 				final DateTime calendar = new DateTime (dialog, SWT.CALENDAR | SWT.BORDER);
-				final DateTime date = new DateTime (dialog, SWT.DATE | SWT.SHORT);
+				//final DateTime date = new DateTime (dialog, SWT.DATE | SWT.SHORT);
 				final DateTime time = new DateTime (dialog, SWT.TIME | SWT.SHORT);
 
 				new Label (dialog, SWT.NONE);
@@ -254,144 +252,67 @@ public class CreateOrderRoom {
 
 		selectRoom();
 		selectCustomer();
-		config = selectConfig();
+		config = UserBUS.selectConfig();
 	}
+	
 	ArrayList<Room> lsOb_r;
-	private boolean selectRoom() {
-		//connections
-		Connection connection;
-		try {
-			connection = ConnectionUtils.getMyConnection();
-			System.out.println("Get connection " + connection);
-			System.out.println("Done!");
-
-			// Tạo đối tượng .		 
-			String sql = String.format("Select ROOM.NAME, NOTE,ROOM.ID,TYPE_ROOM.NAME as TYPE_ROOM_NAME,TYPE_ROOM_ID,PRICE From ROOM , TYPE_ROOM WHERE ROOM.STATUS = 1 and ROOM.TYPE_ROOM_ID = TYPE_ROOM.ID AND ROOM.ID NOT IN (SELECT ROOM_ID FROM db_qlks.ORDER WHERE RECEIPT_ID IS NULL) " ) ;
-
-			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-			ResultSet rs = DatabaseHelper.selectData(sql, connection);
-			lsOb_r = new ArrayList<>();
-			int size = 0;
-
-			// Duyệt trên kết quả trả v�?.
-			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
-				Room ob = new Room();
-				ob.setPRICE(rs.getInt(6));
-				ob.setTYPE_ROOM_ID(rs.getInt(5));
-				ob.setTYPE(rs.getString(4));
-				ob.setID(rs.getInt(3));
-				ob.setNAME(rs.getString(1));
-				ob.setNOTE(rs.getString(2));
-
-				lsOb_r.add(ob);
-				size ++;
-
-			}
-			String[] strings = new String[size];
-			for (int i = 0; i < size; i++) {
-				strings[i] = lsOb_r.get(i).getNAME();	
-			}
-			combo_2.setItems(strings);
-			combo_2.addSelectionListener(new SelectionListener() {
-
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					// TODO Auto-generated method stub
-					current_room_id = lsOb_r.get(combo_2.getSelectionIndex()).getID();
-					price= lsOb_r.get(combo_2.getSelectionIndex()).getPRICE();
-				}
-
-				@Override
-				public void widgetDefaultSelected(SelectionEvent arg0) {
-					// TODO Auto-generated method stub
-				}});
-
-			// Close connection
-			connection.close();
-
-		} catch (SQLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+	
+	private void selectRoom() {
+		lsOb_r = RoomBUS.selectRoom();
+		int size = lsOb_r.size();
+		String[] strings = new String[size];
+		for (int i = 0; i < size; i++) {
+			strings[i] = lsOb_r.get(i).getNAME();	
 		}
+		combo_2.setItems(strings);
+		combo_2.addSelectionListener(new SelectionListener() {
 
-		return false;
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				current_room_id = lsOb_r.get(combo_2.getSelectionIndex()).getID();
+				price= lsOb_r.get(combo_2.getSelectionIndex()).getPRICE();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+			}});
+
 	}
 	ArrayList<Customer> lsOb_c;
-	private boolean selectCustomer() {
-		//connections
-		Connection connection;
-		try {
-			connection = ConnectionUtils.getMyConnection();
-			System.out.println("Get connection " + connection);
-			System.out.println("Done!");
 
-			// Tạo đối tượng .		 
-			String sql = String.format("Select CUSTOMER.NAME, PASSPORT,ADDRESS ,CUSTOMER.ID,TYPE_CUSTOMER.NAME as TYPE_CUSTOMER_NAME,TYPE_CUSTOMER_ID,SURCHARGE From CUSTOMER , TYPE_CUSTOMER WHERE CUSTOMER.STATUS = 1 and CUSTOMER.TYPE_CUSTOMER_ID = TYPE_CUSTOMER.ID" ) ;
-
-			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-			ResultSet rs = DatabaseHelper.selectData(sql, connection);
-			lsOb_c = new ArrayList<>();
-			int size = 0;
-
-			// Duyệt trên kết quả trả v�?.
-			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
-				Customer ob = new Customer();
-				ob.setSURCHARGE(rs.getInt(7));
-				ob.setTYPE_CUSTOMER_ID(rs.getInt(6));
-				ob.setTYPE(rs.getString(5));
-				ob.setID(rs.getInt(4));
-				ob.setNAME(rs.getString(1));
-				ob.setPASSPORT(rs.getString(2));
-				ob.setADDRESS(rs.getString(3));
-
-				lsOb_c.add(ob);
-				size ++;
-
-			}
-			String[] strings = new String[size];
-			for (int i = 0; i < size; i++) {
-				strings[i] = lsOb_c.get(i).getNAME();	
-			}
-			combo.setItems(strings);
-			combo.addSelectionListener(new SelectionListener() {
-
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					// TODO Auto-generated method stub
-					int sum = 0;
-					for (Customer cm : lsObs) {
-						if(cm.getID() == lsOb_c.get(combo.getSelectionIndex()).getID()) {
-							sum = 1;
-						};
-					}if(sum == 0 && lsObs.size() < config.getNUM_CUSTOMER_IN_ROOM()) {
-						lsObs.add(lsOb_c.get(combo.getSelectionIndex()));
-					}else {
-						ShowMessage.ShowError(shlLpPhiuThu,"Quá số khách tối đa trong 1 phòng !", "Lỗi dữ liệu");
-					}
-					showCustomer(lsObs);
-				}
-
-				@Override
-				public void widgetDefaultSelected(SelectionEvent arg0) {
-					// TODO Auto-generated method stub
-				}});
-			// Close connection
-			connection.close();
-
-		} catch (SQLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+	private void selectCustomer() {
+		lsOb_c = CustomerBUS.selectCustomer();
+		int size = lsOb_c.size();
+		
+		String[] strings = new String[size];
+		for (int i = 0; i < size; i++) {
+			strings[i] = lsOb_c.get(i).getNAME();	
 		}
+		combo.setItems(strings);
+		combo.addSelectionListener(new SelectionListener() {
 
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				int sum = 0;
+				for (Customer cm : lsObs) {
+					if(cm.getID() == lsOb_c.get(combo.getSelectionIndex()).getID()) {
+						sum = 1;
+					};
+				}if(sum == 0 && lsObs.size() < config.getNUM_CUSTOMER_IN_ROOM()) {
+					lsObs.add(lsOb_c.get(combo.getSelectionIndex()));
+				}else {
+					ShowMessage.ShowError(shlLpPhiuThu,"Quá số khách tối đa trong 1 phòng !", "Lỗi dữ liệu");
+				}
+				showCustomer(lsObs);
+			}
 
-
-		return false;
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+			}});
 	}
 	Button[] removeButtons ;
 
@@ -450,23 +371,24 @@ public class CreateOrderRoom {
 
 		return false;
 	}
+	
 	private boolean saveOrderRoom(int room_id,int price ,String date, ArrayList<Customer> ls) {
 		
 		if(room_id == 0) {
-			ShowMessage.ShowError(shlLpPhiuThu,"Vui lòng ch�?n phòng", "Lỗi dữ liệu");
+			ShowMessage.ShowError(shlLpPhiuThu,"Vui lòng chọn phòng", "Lỗi dữ liệu");
 
 		}else if(ls.size() == 0) {
-			ShowMessage.ShowError(shlLpPhiuThu,"Vui lòng ch�?n khách hàng", "Lỗi dữ liệu");
+			ShowMessage.ShowError(shlLpPhiuThu,"Vui lòng chọn khách hàng", "Lỗi dữ liệu");
 
 		}else if(date.isEmpty()) {
-			ShowMessage.ShowError(shlLpPhiuThu,"Vui lòng ch�?n ngày", "Lỗi dữ liệu");
+			ShowMessage.ShowError(shlLpPhiuThu,"Vui lòng chọn ngày", "Lỗi dữ liệu");
 
 		}else {
 			int total_price = price;
 			if(ls.size() > config.getNUM_SURCHARGE_CUSTOMER()) {
 				total_price+=( price *config.getSURCHARGE_CUSTOMER()/100);
 			}
-			ArrayList<TypeCustomer> tcs = new ArrayList();
+			ArrayList<TypeCustomer> tcs = new ArrayList<TypeCustomer>();
 			for (Customer customer : ls) {
 				int is_has = 0;
 				for (TypeCustomer t : tcs) {
@@ -490,94 +412,13 @@ public class CreateOrderRoom {
 					total_price+=(total_price * type_CUSTOMER.getSURCHARGE());
 				}
 			}
-			Connection connection;
 			
-			
-			//connections
-			try {
-				connection = ConnectionUtils.getMyConnection();
-				System.out.println("Get connection " + connection);
-				System.out.println("Done!");
-
-				// Tạo đối tượng .		 
-				String sql = String.format("Insert into db_qlks.ORDER (DATE_ORDER,ROOM_ID,PRICE,STATUS,USER_ID) Values( '%s','%s','%s',1,1)",date,room_id,total_price ) ;
-				// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-				int rs = DatabaseHelper.installData(sql, connection);
-
-				int order_id = 0;
-				// Tạo đối tượng .		 
-				String sql1 = String.format("Select MAX(ID) From db_qlks.ORDER" ) ;
-				// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-				ResultSet rss = DatabaseHelper.selectData(sql1, connection);
-				// Duyệt trên kết quả trả v�?.
-				while (rss.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
-					order_id = rss.getInt(1);
-				}
-				for (Customer customer : ls) {
-					String sql2 = String.format("Insert into CUSTOMER_IN_ORDER (ORDER_ID,CUSTOMER_ID) Values( '%s','%s')",order_id,customer.getID() ) ;
-					int rs2 = DatabaseHelper.installData(sql2, connection);
-
-				}
-				// Close connection
-				connection.close();
+			if(OrderBUS.saveOrderRoom( room_id, price , date,  ls, total_price)){
 				shlLpPhiuThu.close();
-
-			} catch (SQLException ex) {
-				// TODO Auto-generated catch block
-				ex.printStackTrace();
-			} catch (ClassNotFoundException ex) {
-				// TODO Auto-generated catch block
-				ex.printStackTrace();
 			}
-
 		}
 
 		return false;
 	}
-	private Config selectConfig() {
-		//connections
-		Connection connection;
-		Config config = new Config();
-		try {
-			connection = ConnectionUtils.getMyConnection();
-			System.out.println("Done!");
-
-
-			// Tạo đối tượng .		 
-			String sql = String.format("Select NUM_TYPE_ROOM,NUM_TYPE_CUSTOMER,NUM_CUSTOMER_IN_ROOM,NUM_SURCHARGE_CUSTOMER,SURCHARGE_CUSTOMER,NUM_SURCHARGE_CUSTOMER_TYPE,HOTEL_NAME,ADDRESS From db_qlks.CONFIG" ) ;
-
-			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-			ResultSet rs = DatabaseHelper.selectData(sql, connection);
-
-			// Duyệt trên kết quả trả v�?.
-			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
-				config.setNUM_TYPE_ROOM((rs.getInt(1)));
-				config.setNUM_TYPE_CUSTOMER(rs.getInt(2));
-				config.setNUM_CUSTOMER_IN_ROOM(rs.getInt(3));
-				config.setNUM_SURCHARGE_CUSTOMER(rs.getInt(4));
-				config.setSURCHARGE_CUSTOMER(rs.getFloat(5));
-				config.setNUM_SURCHARGE_CUSTOMER_TYPE(rs.getInt(6));
-
-				config.setHOTEL_NAME(rs.getString(7));
-				config.setADDRESS(rs.getString(8));
-
-
-			}
-
-
-			// Close connection
-			connection.close();
-
-		} catch (SQLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		}
-
-
-
-		return config;
-	}
+	
 }

@@ -114,7 +114,7 @@ public class CustomerDAO {
 
 		return false;
 	}
-	public static boolean selectTypeCustomer() {
+	public static ArrayList<TypeCustomer> selectTypeCustomer() {
 		
 		//connections
 		Connection connection;
@@ -151,9 +151,7 @@ public class CustomerDAO {
 			ex.printStackTrace();
 		}
 
-
-
-		return false;
+		return lsOb;
 	}
 	public static boolean deleteCustomer(int id) {
 

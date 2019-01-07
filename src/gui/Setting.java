@@ -210,7 +210,7 @@ public class Setting {
 		text_10 = new Text(composite, SWT.BORDER);
 		text_10.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		text_10.setBounds(169, 151, 231, 19);
-		
+
 		Label label = new Label(composite, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("Arial", 10, SWT.NORMAL));
 		label.setBounds(396, 85, 14, 14);
@@ -285,15 +285,15 @@ public class Setting {
 		TableColumn tblclmnChnhSa = new TableColumn(table, SWT.NONE);
 		tblclmnChnhSa.setWidth(59);
 		tblclmnChnhSa.setText("Chỉnh sửa");
-		
+
 		TableColumn tblclmnXo = new TableColumn(table, SWT.NONE);
 		tblclmnXo.setWidth(100);
 		tblclmnXo.setText("Xoá");
 		selectConfig();
 
 		us = Utill.GetSaveUser();
-//		text_6.setText(us.getFULL_NAME());
-//		text_7.setText(us.getUSER_NAME());
+		//		text_6.setText(us.getFULL_NAME());
+		//		text_7.setText(us.getUSER_NAME());
 
 		selectUser();
 	}
@@ -355,149 +355,88 @@ public class Setting {
 				button.dispose();
 			}
 		}
-		//connections
-		Connection connection;
-		try {
-			connection = ConnectionUtils.getMyConnection();
-			System.out.println("Get connection " + connection);
-			System.out.println("Done!");
 
-			// Tạo đối tượng .		 
-			String sql = String.format("Select ID , USER_NAME,FULL_NAME From USER WHERE STATUS = 1" ) ;
+		ArrayList<User> lsOb = UserBUS.selectUser();
+		int size = lsOb.size();
+		// Create five table editors for color
+		editEditors = new TableEditor[size];
+		removeEditors = new TableEditor[size];
 
-			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-			ResultSet rs = DatabaseHelper.selectData(sql, connection);
-			ArrayList<User> lsOb = new ArrayList<>();
-			int size = 0;
-
-			// Duyệt trên kết quả trả v�?.
-			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
-				User ob = new User();
-				ob.setID(rs.getInt(1));
-				ob.setFULL_NAME(rs.getString(3));
-				ob.setUSER_NAME(rs.getString(2));
-
-				lsOb.add(ob);
-				size ++;
-
-			}
-			// Create five table editors for color
-			editEditors = new TableEditor[size];
-			removeEditors = new TableEditor[size];
-
-			// Create five buttons for changing color
-			editButtons = new Button[size];
-			removeButtons = new Button[size];
+		// Create five buttons for changing color
+		editButtons = new Button[size];
+		removeButtons = new Button[size];
 
 
-			for (int i = 0; i < size; i++) {
-				final TableItem item = new TableItem(table, SWT.NONE);
-				item.setText(new String[] {(i + 1)+"",lsOb.get(i).getFULL_NAME(),lsOb.get(i).getUSER_NAME(), "Sửa", "Xoá"});
+		for (int i = 0; i < size; i++) {
+			final TableItem item = new TableItem(table, SWT.NONE);
+			item.setText(new String[] {(i + 1)+"",lsOb.get(i).getFULL_NAME(),lsOb.get(i).getUSER_NAME(), "Sửa", "Xoá"});
 
-				// Create the editor and button
-				editEditors[i] = new TableEditor(table);
-				editButtons[i] = new Button(table, SWT.PUSH);
+			// Create the editor and button
+			editEditors[i] = new TableEditor(table);
+			editButtons[i] = new Button(table, SWT.PUSH);
 
-				// Set attributes of the button
-				editButtons[i].setText("Sửa");
-				editButtons[i].computeSize(SWT.DEFAULT, table.getItemHeight());
+			// Set attributes of the button
+			editButtons[i].setText("Sửa");
+			editButtons[i].computeSize(SWT.DEFAULT, table.getItemHeight());
 
-				// Set attributes of the editor
-				editEditors[i].grabHorizontal = true;
-				editEditors[i].minimumHeight = editButtons[i].getSize().y;
-				editEditors[i].minimumWidth = editButtons[i].getSize().x;
+			// Set attributes of the editor
+			editEditors[i].grabHorizontal = true;
+			editEditors[i].minimumHeight = editButtons[i].getSize().y;
+			editEditors[i].minimumWidth = editButtons[i].getSize().x;
 
-				// Create the editor and button
-				removeEditors[i] = new TableEditor(table);
-				removeButtons[i] = new Button(table, SWT.PUSH);
+			// Create the editor and button
+			removeEditors[i] = new TableEditor(table);
+			removeButtons[i] = new Button(table, SWT.PUSH);
 
-				// Set attributes of the button
-				removeButtons[i].setText("Xoá");
-				removeButtons[i].computeSize(SWT.DEFAULT, table.getItemHeight());
+			// Set attributes of the button
+			removeButtons[i].setText("Xoá");
+			removeButtons[i].computeSize(SWT.DEFAULT, table.getItemHeight());
 
-				// Set attributes of the editor
-				removeEditors[i].grabHorizontal = true;
-				removeEditors[i].minimumHeight = removeButtons[i].getSize().y;
-				removeEditors[i].minimumWidth = removeButtons[i].getSize().x;
+			// Set attributes of the editor
+			removeEditors[i].grabHorizontal = true;
+			removeEditors[i].minimumHeight = removeButtons[i].getSize().y;
+			removeEditors[i].minimumWidth = removeButtons[i].getSize().x;
 
-				// Set the editor for the first column in the row
-				editEditors[i].setEditor(editButtons[i], item, 3);
-				removeEditors[i].setEditor(removeButtons[i], item, 4);
+			// Set the editor for the first column in the row
+			editEditors[i].setEditor(editButtons[i], item, 3);
+			removeEditors[i].setEditor(removeButtons[i], item, 4);
 
-			}
-			for (int i = 0; i < size; i++) {
-				String name = lsOb.get(i).getFULL_NAME();
-				String user = lsOb.get(i).getUSER_NAME();
-				int id = lsOb.get(i).getID();
-
-
-				editButtons[i].addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						text_6.setText(name);
-						text_7.setText(user);
-						text_8.setText("");
-						current_user_id = id;
-					}
-				});
-				removeButtons[i].addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						if(deleteUser(id)) {
-							ShowMessage.ShowError(shlThitLp,"Xoá dữ liệu thành công!", "Lỗi dữ liệu");
-							selectUser();
-						}else {
-							ShowMessage.ShowError(shlThitLp,"Không xoá được!", "Lỗi dữ liệu");
-						}
-
-					}
-				});
-			}
-
-			// Close connection
-			connection.close();
-
-		} catch (SQLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
 		}
+		for (int i = 0; i < size; i++) {
+			String name = lsOb.get(i).getFULL_NAME();
+			String user = lsOb.get(i).getUSER_NAME();
+			int id = lsOb.get(i).getID();
 
+
+			editButtons[i].addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					text_6.setText(name);
+					text_7.setText(user);
+					text_8.setText("");
+					current_user_id = id;
+				}
+			});
+			removeButtons[i].addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if(deleteUser(id)) {
+						ShowMessage.ShowError(shlThitLp,"Xoá dữ liệu thành công!", "Lỗi dữ liệu");
+						selectUser();
+					}else {
+						ShowMessage.ShowError(shlThitLp,"Không xoá được!", "Lỗi dữ liệu");
+					}
+
+				}
+			});
+		}
 		return false;
 	}
 	private boolean deleteUser(int id) {
-
-		//connections
-		System.out.println("Get connection ... ");
-		Connection connection;
-		try {
-			connection = ConnectionUtils.getMyConnection();
-			System.out.println("Get connection " + connection);
-			System.out.println("Done!");
-
-			// Tạo đối tượng .		 
-			String sql = String.format("UPDATE USER set STATUS = '3' WHERE ID ='%s' AND ID != %s",id,us.getID() ) ;
-
-			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-			int rs = DatabaseHelper.installData(sql, connection);
-
-			if(rs > 0) {
-				current_user_id = 0;
-				return true;
-			}
-			// Close connection
-			connection.close();
-
-		} catch (SQLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+		if(UserBUS.deleteUser(id)){
+			current_user_id = 0;
+			return true;
 		}
-
 		return false;
 	}
 	private boolean saveUser(int id ,String name,String full_name, String password) {

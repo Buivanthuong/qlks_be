@@ -3,19 +3,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Monitor;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
 import bus.UserBUS;
-import utill.ConnectionUtils;
-import utill.DatabaseHelper;
 import utill.SWTResourceManager;
 import utill.ShowMessage;
 import utill.Utill;
@@ -25,7 +16,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Rectangle;
 
-import dto.User;
 public class Login {
 
 	protected Shell shell;
@@ -45,9 +35,6 @@ public class Login {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
 
 	/**

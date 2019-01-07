@@ -61,6 +61,5 @@ public class Dialog {
 		});
 		btnThot.setBounds(196, 114, 94, 33);
 		btnThot.setText("Thoát");
-
 	}
 }

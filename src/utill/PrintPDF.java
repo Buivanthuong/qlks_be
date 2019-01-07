@@ -3,7 +3,6 @@ package utill;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BadElementException;
@@ -150,7 +149,7 @@ public class PrintPDF {
 
 	}
 
-	private static void addEmptyLine(Paragraph paragraph, int number) {
+	public static void addEmptyLine(Paragraph paragraph, int number) {
 		for (int i = 0; i < number; i++) {
 			paragraph.add(new Paragraph(" "));
 		}

@@ -3,12 +3,6 @@ package gui;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Composite;
-
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
@@ -17,21 +11,21 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Text;
 
-import utill.ConnectionUtils;
-import utill.DatabaseHelper;
+import bus.RoomBUS;
+import bus.UserBUS;
 import utill.SWTResourceManager;
 import utill.ShowMessage;
 import utill.Utill;
 
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import dto.Config;
 import dto.TypeRoom;
 
 public class ManagerRoomType {
@@ -63,13 +57,13 @@ public class ManagerRoomType {
 		shlLoiPhng.open();
 		shlLoiPhng.layout();
 		Monitor primary = display.getPrimaryMonitor();
-	    Rectangle bounds = primary.getBounds();
-	    Rectangle rect = shlLoiPhng.getBounds();
-	    
-	    int x = bounds.x + (bounds.width - rect.width) / 2;
-	    int y = bounds.y + (bounds.height - rect.height) / 2;
-	    
-	    shlLoiPhng.setLocation(x, y);
+		Rectangle bounds = primary.getBounds();
+		Rectangle rect = shlLoiPhng.getBounds();
+
+		int x = bounds.x + (bounds.width - rect.width) / 2;
+		int y = bounds.y + (bounds.height - rect.height) / 2;
+
+		shlLoiPhng.setLocation(x, y);
 		while (!shlLoiPhng.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -108,7 +102,7 @@ public class ManagerRoomType {
 		TableColumn tblclmnXo = new TableColumn(table, SWT.NONE);
 		tblclmnXo.setWidth(100);
 		tblclmnXo.setText("Xoá");
-		
+
 		Label label = new Label(composite, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		label.setText("Tên loại");
@@ -130,10 +124,10 @@ public class ManagerRoomType {
 		text_1 = new Text(composite, SWT.BORDER);
 		text_1.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		text_1.setBounds(108, 34, 248, 19);
-		
+
 		Button button = new Button(composite, SWT.NONE);
 		button.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		
+
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -163,63 +157,12 @@ public class ManagerRoomType {
 			ShowMessage.ShowError(shlLoiPhng,"Vui lòng nhập đơn giá", "Lỗi dữ liệu");
 
 		}else {
-			Connection connection;
 
-			if(current_id == 0) {
-				//connections
-				try {
-					connection = ConnectionUtils.getMyConnection();
-					System.out.println("Get connection " + connection);
-					System.out.println("Done!");
-
-					// Tạo đối tượng .		 
-					String sql = String.format("Insert into TYPE_ROOM (NAME, PRICE,STATUS) Values( '%s','%s',1)",name,price ) ;
-
-					// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-					int rs = DatabaseHelper.installData(sql, connection);
-
-					if(rs > 0) {
-						return true;
-					}
-					// Close connection
-					connection.close();
-
-				} catch (SQLException ex) {
-					// TODO Auto-generated catch block
-					ex.printStackTrace();
-				} catch (ClassNotFoundException ex) {
-					// TODO Auto-generated catch block
-					ex.printStackTrace();
-				}
-			}else {
-				try {
-					connection = ConnectionUtils.getMyConnection();
-					System.out.println("Get connection " + connection);
-					System.out.println("Done!");
-					// Tạo đối tượng .		 
-					String sql = String.format("UPDATE TYPE_ROOM set NAME = '%s',PRICE ='%s' WHERE ID = '%s'",name,price,current_id ) ;
-
-					// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-					int rs = DatabaseHelper.installData(sql, connection);
-
-					if(rs > 0) {
-						current_id = 0;
-						return true;
-					}
-					// Close connection
-					connection.close();
-
-				} catch (SQLException ex) {
-					// TODO Auto-generated catch block
-					ex.printStackTrace();
-				} catch (ClassNotFoundException ex) {
-					// TODO Auto-generated catch block
-					ex.printStackTrace();
-				}
+			if(RoomBUS.saveRoomType( current_id , name,  price)){
+				current_id = 0;
+				return true;
 			}
-
 		}
-
 		return false;
 	}
 
@@ -239,192 +182,99 @@ public class ManagerRoomType {
 				button.dispose();
 			}
 		}
-		//connections
-		Connection connection;
-		try {
-			connection = ConnectionUtils.getMyConnection();
-			System.out.println("Get connection " + connection);
-			System.out.println("Done!");
 
-			// Tạo đối tượng .		 
-			String sql = String.format("Select NAME, PRICE,ID From TYPE_ROOM WHERE STATUS = 1" ) ;
+		ArrayList<TypeRoom> lsOb  = RoomBUS.selectTypeRoom();
+		int size = lsOb.size();
+		// Create five table editors for color
+		editEditors = new TableEditor[size];
+		removeEditors = new TableEditor[size];
 
-			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-			ResultSet rs = DatabaseHelper.selectData(sql, connection);
-			ArrayList<TypeRoom> lsOb = new ArrayList<>();
-			int size = 0;
-
-			// Duyệt trên kết quả trả v�?.
-			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
-				TypeRoom ob = new TypeRoom();
-				ob.setPRICE(rs.getInt(2));
-				ob.setID(rs.getInt(3));
-				ob.setNAME(rs.getString(1));
-				lsOb.add(ob);
-				size ++;
-
-			}
-			// Create five table editors for color
-			editEditors = new TableEditor[size];
-			removeEditors = new TableEditor[size];
-
-			// Create five buttons for changing color
-			editButtons = new Button[size];
-			removeButtons = new Button[size];
+		// Create five buttons for changing color
+		editButtons = new Button[size];
+		removeButtons = new Button[size];
 
 
-			for (int i = 0; i < size; i++) {
-				final TableItem item = new TableItem(table, SWT.NONE);
-				item.setText(new String[] {lsOb.get(i).getNAME(), Utill.formatCurrency(lsOb.get(i).getPRICE()) + "", "Sửa", "Xoá"});
+		for (int i = 0; i < size; i++) {
+			final TableItem item = new TableItem(table, SWT.NONE);
+			item.setText(new String[] {lsOb.get(i).getNAME(), Utill.formatCurrency(lsOb.get(i).getPRICE()) + "", "Sửa", "Xoá"});
 
-				// Create the editor and button
-				editEditors[i] = new TableEditor(table);
-				editButtons[i] = new Button(table, SWT.PUSH);
+			// Create the editor and button
+			editEditors[i] = new TableEditor(table);
+			editButtons[i] = new Button(table, SWT.PUSH);
 
-				// Set attributes of the button
-				editButtons[i].setText("Sửa");
-				editButtons[i].computeSize(SWT.DEFAULT, table.getItemHeight());
+			// Set attributes of the button
+			editButtons[i].setText("Sửa");
+			editButtons[i].computeSize(SWT.DEFAULT, table.getItemHeight());
 
-				// Set attributes of the editor
-				editEditors[i].grabHorizontal = true;
-				editEditors[i].minimumHeight = editButtons[i].getSize().y;
-				editEditors[i].minimumWidth = editButtons[i].getSize().x;
+			// Set attributes of the editor
+			editEditors[i].grabHorizontal = true;
+			editEditors[i].minimumHeight = editButtons[i].getSize().y;
+			editEditors[i].minimumWidth = editButtons[i].getSize().x;
 
-				// Create the editor and button
-				removeEditors[i] = new TableEditor(table);
-				removeButtons[i] = new Button(table, SWT.PUSH);
+			// Create the editor and button
+			removeEditors[i] = new TableEditor(table);
+			removeButtons[i] = new Button(table, SWT.PUSH);
 
-				// Set attributes of the button
-				removeButtons[i].setText("Xoá");
-				removeButtons[i].computeSize(SWT.DEFAULT, table.getItemHeight());
+			// Set attributes of the button
+			removeButtons[i].setText("Xoá");
+			removeButtons[i].computeSize(SWT.DEFAULT, table.getItemHeight());
 
-				// Set attributes of the editor
-				removeEditors[i].grabHorizontal = true;
-				removeEditors[i].minimumHeight = removeButtons[i].getSize().y;
-				removeEditors[i].minimumWidth = removeButtons[i].getSize().x;
+			// Set attributes of the editor
+			removeEditors[i].grabHorizontal = true;
+			removeEditors[i].minimumHeight = removeButtons[i].getSize().y;
+			removeEditors[i].minimumWidth = removeButtons[i].getSize().x;
 
-				// Set the editor for the first column in the row
-				editEditors[i].setEditor(editButtons[i], item, 2);
-				removeEditors[i].setEditor(removeButtons[i], item, 3);
+			// Set the editor for the first column in the row
+			editEditors[i].setEditor(editButtons[i], item, 2);
+			removeEditors[i].setEditor(removeButtons[i], item, 3);
 
-			}
-			for (int i = 0; i < size; i++) {
-				String name = lsOb.get(i).getNAME();
-				int price = lsOb.get(i).getPRICE();
-				int id = lsOb.get(i).getID();
-
-
-				editButtons[i].addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						text.setText(name);
-						text_1.setText(price+ "");
-						current_id = id;
-					}
-				});
-				removeButtons[i].addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						if(deleteRoomType(id)) {
-							ShowMessage.ShowError(shlLoiPhng,"Xoá dữ liệu thành công được!", "Lỗi dữ liệu");
-							selectTypeRoom();
-						}else {
-							ShowMessage.ShowError(shlLoiPhng,"Không xoá được!", "Lỗi dữ liệu");
-						}
-
-					}
-				});
-			}
-
-			// Close connection
-			connection.close();
-
-		} catch (SQLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
 		}
+		for (int i = 0; i < size; i++) {
+			String name = lsOb.get(i).getNAME();
+			int price = lsOb.get(i).getPRICE();
+			int id = lsOb.get(i).getID();
 
 
+			editButtons[i].addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					text.setText(name);
+					text_1.setText(price+ "");
+					current_id = id;
+				}
+			});
+			removeButtons[i].addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if(deleteRoomType(id)) {
+						ShowMessage.ShowError(shlLoiPhng,"Xoá dữ liệu thành công được!", "Lỗi dữ liệu");
+						selectTypeRoom();
+					}else {
+						ShowMessage.ShowError(shlLoiPhng,"Không xoá được!", "Lỗi dữ liệu");
+					}
+
+				}
+			});
+		}
 
 		return false;
 	}
 	private boolean selectIsInstall() {
+		Config cf = UserBUS.selectConfig();
+		int NUM_TYPE_ROOM = cf.getNUM_TYPE_ROOM();
+		int NUM_ROOM = cf.getNUM_OF_TYPE_ROOM();
 
-		//connections
-		System.out.println("Get connection ... ");
-		Connection connection;
-		try {
-			connection = ConnectionUtils.getMyConnection();
-			System.out.println("Get connection " + connection);
-			System.out.println("Done!");
-
-			// Tạo đối tượng .		 
-			String sql = String.format("Select CONFIG.NUM_TYPE_ROOM ,(Select COUNT(TYPE_ROOM.ID) From TYPE_ROOM WHERE STATUS = 1 ) as NUM_ROOM From CONFIG" ) ;
-
-			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-			ResultSet rs = DatabaseHelper.selectData(sql, connection);
-			int NUM_TYPE_ROOM  = 0;
-			int NUM_ROOM = 0;
-			// Duyệt trên kết quả trả v�?.
-			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
-				NUM_TYPE_ROOM = rs.getInt(1);
-				NUM_ROOM = rs.getInt(2);
-
-			}
-			if(NUM_TYPE_ROOM > NUM_ROOM) {
-				return true;
-			}
-			// Close connection
-			connection.close();
-
-		} catch (SQLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+		if(NUM_TYPE_ROOM > NUM_ROOM) {
+			return true;
 		}
-
-
-
 		return false;
 	}
 	private boolean deleteRoomType(int id) {
 
-		//connections
-		System.out.println("Get connection ... ");
-		Connection connection;
-		try {
-			connection = ConnectionUtils.getMyConnection();
-			System.out.println("Get connection " + connection);
-			System.out.println("Done!");
-
-			// Tạo đối tượng .		 
-			String sql = String.format("UPDATE TYPE_ROOM set STATUS = '3' WHERE ID ='%s'",id ) ;
-
-			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
-			int rs = DatabaseHelper.installData(sql, connection);
-
-			if(rs > 0) {
-				current_id = 0;
-				return true;
-			}
-			// Close connection
-			connection.close();
-
-		} catch (SQLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+		if( RoomBUS.deleteRoomType(id)){
+			current_id = 0;
+			return true;
 		}
-
-
-
 		return false;
 	}
 }

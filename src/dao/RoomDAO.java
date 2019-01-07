@@ -10,7 +10,7 @@ import utill.ConnectionUtils;
 import utill.DatabaseHelper;
 
 public class RoomDAO {
-	public static boolean selectRoom(int STATUS, String text) {
+	public static ArrayList<Room> selectRoom(int STATUS, String text) {
 		
 		ArrayList<Room> lsOb = new ArrayList<>();
 
@@ -80,9 +80,7 @@ public class RoomDAO {
 			ex.printStackTrace();
 		}
 
-
-
-		return false;
+		return lsOb;
 	}
 	
 	public static boolean saveRoom(int id ,String name,String note, int id_type) {
