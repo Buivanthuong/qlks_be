@@ -8,7 +8,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.ArrayList;
 import dto.Config;
 import dto.User;
 import utill.ConnectionUtils;
@@ -156,4 +156,152 @@ public class UserDAO {
 		
 		return false;
 	}
+	public static boolean selectConfig() {
+		//connections
+		Config cf = new Config();
+		Connection connection;
+		try {
+			connection = ConnectionUtils.getMyConnection();
+			System.out.println("Done!");
+
+			// Tạo đối tượng .		 
+			String sql = String.format("Select HOTEL_NAME, ADDRESS From db_qlks.CONFIG" ) ;
+
+			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
+			ResultSet rs = DatabaseHelper.selectData(sql, connection);
+
+			// Duyệt trên kết quả trả v�?.
+			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
+				cf.setADDRESS(rs.getString(2));
+				cf.setHOTEL_NAME(rs.getString(1));
+			}
+			// Close connection
+			connection.close();
+
+		} catch (SQLException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+
+
+
+		return false;
+	}
+	public static boolean selectIsInstall() {
+
+		//connections
+		System.out.println("Get connection ... ");
+		Connection connection;
+		try {
+			connection = ConnectionUtils.getMyConnection();
+			System.out.println("Get connection " + connection);
+			System.out.println("Done!");
+
+			// Tạo đối tượng .		 
+			String sql = String.format("Select CONFIG.NUM_TYPE_ROOM ,(Select COUNT(TYPE_ROOM.ID) From TYPE_ROOM WHERE STATUS = 1 ) as NUM_ROOM From CONFIG" ) ;
+
+			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
+			ResultSet rs = DatabaseHelper.selectData(sql, connection);
+			int NUM_TYPE_ROOM  = 0;
+			int NUM_ROOM = 0;
+			// Duyệt trên kết quả trả v�?.
+			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
+				NUM_TYPE_ROOM = rs.getInt(1);
+				NUM_ROOM = rs.getInt(2);
+
+			}
+			if(NUM_TYPE_ROOM > NUM_ROOM) {
+				return true;
+			}
+			// Close connection
+			connection.close();
+
+		} catch (SQLException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+
+
+
+		return false;
+	}
+	public static ArrayList<User>  selectUser() {
+		ArrayList<User> lsOb = new ArrayList<>();
+		//connections
+		Connection connection;
+		try {
+			connection = ConnectionUtils.getMyConnection();
+			System.out.println("Get connection " + connection);
+			System.out.println("Done!");
+
+			// Tạo đối tượng .		 
+			String sql = String.format("Select ID , USER_NAME,FULL_NAME From USER WHERE STATUS = 1" ) ;
+
+			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
+			ResultSet rs = DatabaseHelper.selectData(sql, connection);
+			
+
+			// Duyệt trên kết quả trả v�?.
+			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
+				User ob = new User();
+				ob.setID(rs.getInt(1));
+				ob.setFULL_NAME(rs.getString(3));
+				ob.setUSER_NAME(rs.getString(2));
+
+				lsOb.add(ob);
+			}
+
+			// Close connection
+			connection.close();
+
+		} catch (SQLException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+
+		return lsOb;
+	}
+	public static boolean deleteUser(int id) {
+
+		//connections
+		System.out.println("Get connection ... ");
+		Connection connection;
+		try {
+			connection = ConnectionUtils.getMyConnection();
+			System.out.println("Get connection " + connection);
+			System.out.println("Done!");
+
+			// Tạo đối tượng .		 
+			String sql = String.format("UPDATE USER set STATUS = '3' WHERE ID ='%s'",id ) ;
+
+			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
+			int rs = DatabaseHelper.installData(sql, connection);
+
+			if(rs > 0) {
+				return true;
+			}
+			// Close connection
+			connection.close();
+
+		} catch (SQLException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+
+		return false;
+	}
+
+	
 }

@@ -167,7 +167,7 @@ public class ManagerCustomer {
 		
 		TableColumn tblclmnaCh = new TableColumn(table, SWT.NONE);
 		tblclmnaCh.setWidth(90);
-		tblclmnaCh.setText("�?ịa chỉ");
+		tblclmnaCh.setText("Địa chỉ");
 		
 		TableColumn tblclmnLoi = new TableColumn(table, SWT.NONE);
 		tblclmnLoi.setWidth(61);
@@ -197,7 +197,7 @@ public class ManagerCustomer {
 		
 		Label lblaCh = new Label(composite, SWT.NONE);
 		lblaCh.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		lblaCh.setText("�?ịa chỉ");
+		lblaCh.setText("Địa chỉ");
 		lblaCh.setBounds(10, 59, 92, 14);
 		
 		text_2 = new Text(composite, SWT.BORDER);
@@ -212,7 +212,7 @@ public class ManagerCustomer {
 			ShowMessage.ShowError(shlQunLKhch,"Vui lòng nhập tên khách hàng", "Lỗi dữ liệu");
 
 		}else if(id_type == 0) {
-			ShowMessage.ShowError(shlQunLKhch,"Vui lòng ch�?n loại khách hàng", "Lỗi dữ liệu");
+			ShowMessage.ShowError(shlQunLKhch,"Vui lòng chọn loại khách hàng", "Lỗi dữ liệu");
 
 		}else {
 			Connection connection;

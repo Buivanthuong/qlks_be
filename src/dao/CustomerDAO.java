@@ -5,19 +5,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Button;
-
 import dto.Customer;
+import dto.TypeCustomer;
 import utill.ConnectionUtils;
 import utill.DatabaseHelper;
-import utill.ShowMessage;
 
 public class CustomerDAO {
-	private boolean selectCustomer() {
+	public static ArrayList<Customer> selectCustomer() {
 		//connections
 		Connection connection;
+		ArrayList<Customer>lsOb_c = new ArrayList<>();
 		try {
 			connection = ConnectionUtils.getMyConnection();
 			System.out.println("Get connection " + connection);
@@ -28,8 +25,7 @@ public class CustomerDAO {
 
 			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
 			ResultSet rs = DatabaseHelper.selectData(sql, connection);
-			lsOb_c = new ArrayList<>();
-			int size = 0;
+			
 
 			// Duyệt trên kết quả trả v�?.
 			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
@@ -43,36 +39,107 @@ public class CustomerDAO {
 				ob.setADDRESS(rs.getString(3));
 
 				lsOb_c.add(ob);
-				size ++;
 
 			}
-			String[] strings = new String[size];
-			for (int i = 0; i < size; i++) {
-				strings[i] = lsOb_c.get(i).getNAME();	
-			}
-			combo.setItems(strings);
-			combo.addSelectionListener(new SelectionListener() {
+			// Close connection
+			connection.close();
 
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					// TODO Auto-generated method stub
-					int sum = 0;
-					for (Customer cm : lsObs) {
-						if(cm.getID() == lsOb_c.get(combo.getSelectionIndex()).getID()) {
-							sum = 1;
-						};
-					}if(sum == 0 && lsObs.size() < config.getNUM_CUSTOMER_IN_ROOM()) {
-						lsObs.add(lsOb_c.get(combo.getSelectionIndex()));
-					}else {
-						ShowMessage.ShowError(shlLpPhiuThu,"Quá số khách tối đa trong 1 phòng !", "Lỗi dữ liệu");
+		} catch (SQLException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+
+
+
+		return lsOb_c;
+	}
+	public static boolean saveCustomer(int id ,String name,String passport,String address, int id_type) {
+		
+			Connection connection;
+
+			if(id == 0) {
+				//connections
+				try {
+					connection = ConnectionUtils.getMyConnection();
+					System.out.println("Get connection " + connection);
+					System.out.println("Done!");
+
+					// Tạo đối tượng .		 
+					String sql = String.format("Insert into CUSTOMER (NAME, PASSPORT,ADDRESS,TYPE_CUSTOMER_ID,STATUS) Values( '%s','%s','%s','%s',1)",name,passport,address,id_type + "" ) ;
+
+					// Thực thi câu lệnh SQL trả  đối tượng ResultSet.
+					int rs = DatabaseHelper.installData(sql, connection);
+
+					if(rs > 0) {
+						return true;
 					}
-					showCustomer(lsObs);
-				}
+					// Close connection
+					connection.close();
 
-				@Override
-				public void widgetDefaultSelected(SelectionEvent arg0) {
-					// TODO Auto-generated method stub
-				}});
+				} catch (SQLException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				} catch (ClassNotFoundException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			}else {
+				try {
+					connection = ConnectionUtils.getMyConnection();
+					System.out.println("Get connection " + connection);
+					System.out.println("Done!");
+					// Tạo đối tượng .		 
+					String sql = String.format("UPDATE CUSTOMER set NAME = '%s',PASSPORT ='%s',ADDRESS ='%s',TYPE_CUSTOMER_ID = '%s' WHERE ID = '%s'",name,passport,address,id_type,id ) ;
+
+					// Thực thi câu lệnh SQL trả đối tượng ResultSet.
+					int rs = DatabaseHelper.installData(sql, connection);
+
+					if(rs > 0) {
+						return true;
+					}
+					// Close connection
+					connection.close();
+
+				} catch (SQLException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				} catch (ClassNotFoundException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			}
+
+		return false;
+	}
+	public static boolean selectTypeCustomer() {
+		
+		//connections
+		Connection connection;
+		ArrayList<TypeCustomer>lsOb = new ArrayList<>();
+		try {
+			connection = ConnectionUtils.getMyConnection();
+			System.out.println("Get connection " + connection);
+			System.out.println("Done!");
+
+			// Tạo đối tượng .		 
+			String sql = String.format("Select NAME, SURCHARGE,ID From TYPE_CUSTOMER WHERE STATUS = 1" ) ;
+
+			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
+			ResultSet rs = DatabaseHelper.selectData(sql, connection);
+
+			// Duyệt trên kết quả trả v�?.
+			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
+				TypeCustomer ob = new TypeCustomer();
+				ob.setSURCHARGE(rs.getDouble(2));
+				ob.setID(rs.getInt(3));
+				ob.setNAME(rs.getString(1));
+				lsOb.add(ob);
+
+			}
+			
 			// Close connection
 			connection.close();
 
@@ -88,6 +155,173 @@ public class CustomerDAO {
 
 		return false;
 	}
-	Button[] removeButtons ;
+	public static boolean deleteCustomer(int id) {
+
+		//connections
+		System.out.println("Get connection ... ");
+		Connection connection;
+		try {
+			connection = ConnectionUtils.getMyConnection();
+			System.out.println("Get connection " + connection);
+			System.out.println("Done!");
+
+			// Tạo đối tượng .		 
+			String sql = String.format("UPDATE CUSTOMER set STATUS = '3' WHERE ID ='%s'",id ) ;
+
+			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
+			int rs = DatabaseHelper.installData(sql, connection);
+
+			if(rs > 0) {
+				return true;
+			}
+			// Close connection
+			connection.close();
+
+		} catch (SQLException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+
+
+
+		return false;
+	}
+
+	public static boolean saveCustomerType(int id ,String name, String surcharge) {
+		
+			Connection connection;
+
+			if(id == 0) {
+				//connections
+				try {
+					connection = ConnectionUtils.getMyConnection();
+					System.out.println("Get connection " + connection);
+					System.out.println("Done!");
+
+					// Tạo đối tượng .		 
+					String sql = String.format("Insert into TYPE_CUSTOMER (NAME, SURCHARGE,STATUS) Values( '%s','%s',1)",name,surcharge ) ;
+
+					// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
+					int rs = DatabaseHelper.installData(sql, connection);
+
+					if(rs > 0) {
+						return true;
+					}
+					// Close connection
+					connection.close();
+
+				} catch (SQLException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				} catch (ClassNotFoundException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			}else {
+				try {
+					connection = ConnectionUtils.getMyConnection();
+					System.out.println("Get connection " + connection);
+					System.out.println("Done!");
+					// Tạo đối tượng .		 
+					String sql = String.format("UPDATE TYPE_CUSTOMER set NAME = '%s',SURCHARGE ='%s' WHERE ID = '%s'",name,surcharge,id ) ;
+
+					// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
+					int rs = DatabaseHelper.installData(sql, connection);
+
+					if(rs > 0) {
+						return true;
+					}
+					// Close connection
+					connection.close();
+
+				} catch (SQLException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				} catch (ClassNotFoundException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			}
+
+		
+
+		return false;
+	}
+	public static boolean selectIsInstall() {
+
+		//connections
+		System.out.println("Get connection ... ");
+		Connection connection;
+		try {
+			connection = ConnectionUtils.getMyConnection();
+			System.out.println("Get connection " + connection);
+			System.out.println("Done!");
+
+			// Tạo đối tượng .		 
+			String sql = String.format("Select CONFIG.NUM_TYPE_CUSTOMER ,(Select COUNT(TYPE_CUSTOMER.ID) From TYPE_CUSTOMER WHERE STATUS = 1 ) as NUM_CUSTOMER From CONFIG" ) ;
+
+			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
+			ResultSet rs = DatabaseHelper.selectData(sql, connection);
+			int NUM_TYPE_CUSTOMER  = 0;
+			int NUM_CUSTOMER = 0;
+			// Duyệt trên kết quả trả v�?.
+			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
+				NUM_TYPE_CUSTOMER = rs.getInt(1);
+				NUM_CUSTOMER = rs.getInt(2);
+
+			}
+			if(NUM_TYPE_CUSTOMER > NUM_CUSTOMER) {
+				return true;
+			}
+			// Close connection
+			connection.close();
+
+		} catch (SQLException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+
+
+
+		return false;
+	}
+	public static boolean deleteCustomerType(int id) {
+
+		//connections
+		System.out.println("Get connection ... ");
+		Connection connection;
+		try {
+			connection = ConnectionUtils.getMyConnection();
+			System.out.println("Get connection " + connection);
+			System.out.println("Done!");
+
+			// Tạo đối tượng .		 
+			String sql = String.format("UPDATE TYPE_CUSTOMER set STATUS = '3' WHERE ID ='%s'",id ) ;
+
+			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
+			int rs = DatabaseHelper.installData(sql, connection);
+
+			if(rs > 0) {
+				return true;
+			}
+			// Close connection
+			connection.close();
+
+		} catch (SQLException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+
+		return false;
+	}
 
 }

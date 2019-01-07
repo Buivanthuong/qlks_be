@@ -2,6 +2,7 @@ eclipse.preferences.version=1
 encoding//src/bus/UserBUS.java=UTF-8
 encoding//src/dao/CustomerDAO.java=UTF-8
 encoding//src/dao/OrderDAO.java=UTF-8
+encoding//src/dao/RoomDAO.java=UTF-8
 encoding//src/dao/UserDAO.java=UTF-8
 encoding//src/gui/CreateOrderRoom.java=UTF-8
 encoding//src/gui/CreateReceiptOrder.java=UTF-8
