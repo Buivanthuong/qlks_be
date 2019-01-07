@@ -97,12 +97,12 @@ public class Dashboard {
 
 		lblaCh = new Label(composite, SWT.NONE);
 		lblaCh.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		lblaCh.setBounds(10, 46, 471, 14);
+		lblaCh.setBounds(10, 46, 471, 20);
 		lblaCh.setText("Địa chỉ: 123 Tô hiến thành, Quận 1, TP.HCM");
 
 		lblNhnVinBi = new Label(composite, SWT.NONE);
 		lblNhnVinBi.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		lblNhnVinBi.setBounds(10, 66, 276, 14);
+		lblNhnVinBi.setBounds(10, 66, 276, 20);
 		lblNhnVinBi.setText("Nhân viên: Bùi văn thương");
 
 		text = new Text(composite, SWT.BORDER);
@@ -212,7 +212,7 @@ public class Dashboard {
 				login.open();
 			}
 		});
-		btnThot.setText("�?ăng xuất");
+		btnThot.setText("Đăng xuất");
 		btnThot.setBounds(10, 280, 165, 39);
 
 		Button button = new Button(composite_1, SWT.NONE);
@@ -300,10 +300,11 @@ public class Dashboard {
 
 
 		Config cf =UserBUS.selectConfig();
-		lblaCh.setText("Địa chỉ: "+cf.getADDRESS());
-		lblNewLabel.setText(cf.getHOTEL_NAME());
-		lblNhnVinBi.setText("Nhân viên: "+  Utill.GetSaveUser().getFULL_NAME());
-		
+		if( cf != null){
+			lblaCh.setText("Địa chỉ: "+cf.getADDRESS());
+			lblNewLabel.setText(""+ cf.getHOTEL_NAME());
+			lblNhnVinBi.setText("Nhân viên: "+  Utill.GetSaveUser().getFULL_NAME());
+		}
 
 		Thread updateThread = new Thread() {
 			public void run() {

@@ -52,6 +52,9 @@ public class UserDAO {
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
 
 		return ob;
@@ -87,6 +90,9 @@ public class UserDAO {
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
 		return _ID;
 	}
@@ -113,6 +119,9 @@ public class UserDAO {
 			ex.printStackTrace();
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
 			ex.printStackTrace();
 		}
 		
@@ -151,6 +160,9 @@ public class UserDAO {
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
 		
 		
@@ -158,18 +170,18 @@ public class UserDAO {
 	}
 	public static Config selectConfig() {
 		//connections
-		Config cf = new Config();
+		Config cf = null ;
 		Connection connection;
 		try {
 			connection = ConnectionUtils.getMyConnection();
 			System.out.println("Done!");
 
 			// Tạo đối tượng .		 
-			String sql = String.format("Select HOTEL_NAME, ADDRESS,CONFIG.NUM_TYPE_CUSTOMER ,(Select COUNT(TYPE_CUSTOMER.ID) From TYPE_CUSTOMER WHERE STATUS = 1 ) as NUM_CUSTOMER,CONFIG.NUM_TYPE_ROOM ,(Select COUNT(TYPE_ROOM.ID) From TYPE_ROOM WHERE STATUS = 1 ) as NUM_ROOM From db_qlks.CONFIG" ) ;
+			String sql = String.format("Select HOTEL_NAME, ADDRESS,CONFIG.NUM_TYPE_CUSTOMER ,(Select COUNT(TYPE_CUSTOMER.ID) From TYPE_CUSTOMER WHERE STATUS = 1 ) as NUM_CUSTOMER,CONFIG.NUM_TYPE_ROOM ,(Select COUNT(TYPE_ROOM.ID) From TYPE_ROOM WHERE STATUS = 1 ) as NUM_ROOM From qlks_db.CONFIG" ) ;
 
 			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
 			ResultSet rs = DatabaseHelper.selectData(sql, connection);
-
+			cf = new Config();
 			// Duyệt trên kết quả trả v�?.
 			while (rs.next()) {// Di chuyển con tr�? xuống bản ghi kế tiếp.
 				cf.setADDRESS(rs.getString(2));
@@ -181,18 +193,19 @@ public class UserDAO {
 			}
 			// Close connection
 			connection.close();
-
+			return cf;
 		} catch (SQLException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
+		return null;
 
-
-
-		return cf;
 	}
 	public static boolean selectIsInstall() {
 
@@ -228,6 +241,9 @@ public class UserDAO {
 			ex.printStackTrace();
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
 			ex.printStackTrace();
 		}
 
@@ -270,6 +286,9 @@ public class UserDAO {
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
 
 		return lsOb;
@@ -301,6 +320,9 @@ public class UserDAO {
 			ex.printStackTrace();
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
 			ex.printStackTrace();
 		}
 

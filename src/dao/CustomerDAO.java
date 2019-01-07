@@ -50,6 +50,9 @@ public class CustomerDAO {
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
 
 
@@ -85,6 +88,9 @@ public class CustomerDAO {
 				} catch (ClassNotFoundException ex) {
 					// TODO Auto-generated catch block
 					ex.printStackTrace();
+				}catch (Exception ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
 				}
 			}else {
 				try {
@@ -108,6 +114,9 @@ public class CustomerDAO {
 					ex.printStackTrace();
 				} catch (ClassNotFoundException ex) {
 					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}catch (Exception ex) {
+					// TODO: handle exception
 					ex.printStackTrace();
 				}
 			}
@@ -149,6 +158,9 @@ public class CustomerDAO {
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
 
 		return lsOb;
@@ -180,6 +192,9 @@ public class CustomerDAO {
 			ex.printStackTrace();
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
 			ex.printStackTrace();
 		}
 
@@ -217,6 +232,9 @@ public class CustomerDAO {
 				} catch (ClassNotFoundException ex) {
 					// TODO Auto-generated catch block
 					ex.printStackTrace();
+				}catch (Exception ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
 				}
 			}else {
 				try {
@@ -240,6 +258,9 @@ public class CustomerDAO {
 					ex.printStackTrace();
 				} catch (ClassNotFoundException ex) {
 					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}catch (Exception ex) {
+					// TODO: handle exception
 					ex.printStackTrace();
 				}
 			}
@@ -283,6 +304,9 @@ public class CustomerDAO {
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
 
 
@@ -316,6 +340,9 @@ public class CustomerDAO {
 			ex.printStackTrace();
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
 			ex.printStackTrace();
 		}
 

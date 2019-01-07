@@ -25,7 +25,7 @@ public class RoomDAO {
 				where = " and ROOM.NAME like '%"+text+"%'";
 			}
 			// Tạo đối tượng .		 
-			String sql = ("Select ROOM.NAME, NOTE,ROOM.ID,TYPE_ROOM.NAME as TYPE_ROOM_NAME,TYPE_ROOM_ID,PRICE, (Select 2 from db_qlks.ORDER where ROOM.ID  = db_qlks.ORDER.ROOM_ID  and RECEIPT_ID IS NULL GROUP BY ROOM.ID  )  AS STATUS  From ROOM , TYPE_ROOM WHERE ROOM.STATUS = 1 and ROOM.TYPE_ROOM_ID = TYPE_ROOM.ID" + where ) ;
+			String sql = ("Select ROOM.NAME, NOTE,ROOM.ID,TYPE_ROOM.NAME as TYPE_ROOM_NAME,TYPE_ROOM_ID,PRICE, (Select 2 from qlks_db.ORDER where ROOM.ID  = qlks_db.ORDER.ROOM_ID  and RECEIPT_ID IS NULL GROUP BY ROOM.ID  )  AS STATUS  From ROOM , TYPE_ROOM WHERE ROOM.STATUS = 1 and ROOM.TYPE_ROOM_ID = TYPE_ROOM.ID" + where ) ;
 
 			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
 			ResultSet rs = DatabaseHelper.selectData(sql, connection);
@@ -67,19 +67,18 @@ public class RoomDAO {
 					lsOb.add(ob);
 				}
 			}
-
-
 			// Close connection
 			connection.close();
-
 		} catch (SQLException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
-
 		return lsOb;
 	}
 	
@@ -112,6 +111,9 @@ public class RoomDAO {
 				} catch (ClassNotFoundException ex) {
 					// TODO Auto-generated catch block
 					ex.printStackTrace();
+				}catch (Exception ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
 				}
 			}else {
 				try {
@@ -135,6 +137,9 @@ public class RoomDAO {
 					ex.printStackTrace();
 				} catch (ClassNotFoundException ex) {
 					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}catch (Exception ex) {
+					// TODO: handle exception
 					ex.printStackTrace();
 				}
 			}
@@ -181,6 +186,9 @@ public class RoomDAO {
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
 
 
@@ -223,6 +231,9 @@ public class RoomDAO {
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
 
 
@@ -257,6 +268,9 @@ public class RoomDAO {
 			ex.printStackTrace();
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
 			ex.printStackTrace();
 		}
 
@@ -294,6 +308,9 @@ public class RoomDAO {
 				} catch (ClassNotFoundException ex) {
 					// TODO Auto-generated catch block
 					ex.printStackTrace();
+				}catch (Exception ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
 				}
 			}else {
 				try {
@@ -317,6 +334,9 @@ public class RoomDAO {
 					ex.printStackTrace();
 				} catch (ClassNotFoundException ex) {
 					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}catch (Exception ex) {
+					// TODO: handle exception
 					ex.printStackTrace();
 				}
 			}
@@ -352,6 +372,9 @@ public class RoomDAO {
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
 
 		return false;
@@ -367,13 +390,13 @@ public class RoomDAO {
 			System.out.println("Done!");
 
 			// Tạo đối tượng .		 
-			String sql = String.format("SELECT db_qlks.ROOM.ID ,db_qlks.ROOM.NAME , SUM(db_qlks.ORDER.PRICE) as PRICE\n" + 
-					"	FROM db_qlks.ROOM , db_qlks.ORDER" + 
+			String sql = String.format("SELECT qlks_db.ROOM.ID ,qlks_db.ROOM.NAME , SUM(qlks_db.ORDER.PRICE) as PRICE\n" + 
+					"	FROM qlks_db.ROOM , qlks_db.ORDER" + 
 					" Where " + 
-					"	 db_qlks.ROOM.ID = db_qlks.ORDER.ROOM_ID" + 
-					"    and db_qlks.ORDER.RECEIPT_ID is not null" + 
-					"    and  MONTH(db_qlks.ORDER.DATE_ORDER) = %s" + 
-					" group by db_qlks.ROOM.ID,db_qlks.ROOM.NAME" + 
+					"	 qlks_db.ROOM.ID = qlks_db.ORDER.ROOM_ID" + 
+					"    and qlks_db.ORDER.RECEIPT_ID is not null" + 
+					"    and  MONTH(qlks_db.ORDER.DATE_ORDER) = %s" + 
+					" group by qlks_db.ROOM.ID,qlks_db.ROOM.NAME" + 
 					" " ,month) ;
 
 			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
@@ -397,6 +420,9 @@ public class RoomDAO {
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
 		}
 
 
@@ -414,12 +440,12 @@ public class RoomDAO {
 			System.out.println("Done!");
 
 			// Tạo đối tượng .		 
-			String sql = String.format("SELECT db_qlks.TYPE_ROOM.ID ,db_qlks.TYPE_ROOM.NAME , SUM(db_qlks.ORDER.PRICE) as PRICE FROM db_qlks.TYPE_ROOM, db_qlks.ORDER, db_qlks.ROOM\n" + 
+			String sql = String.format("SELECT qlks_db.TYPE_ROOM.ID ,qlks_db.TYPE_ROOM.NAME , SUM(qlks_db.ORDER.PRICE) as PRICE FROM qlks_db.TYPE_ROOM, qlks_db.ORDER, qlks_db.ROOM\n" + 
 					"Where" + 
-					"	db_qlks.ROOM.ID = db_qlks.ORDER.ROOM_ID" + 
+					"	qlks_db.ROOM.ID = qlks_db.ORDER.ROOM_ID" + 
 					"    and" + 
-					"    db_qlks.TYPE_ROOM.ID = db_qlks.ROOM.TYPE_ROOM_ID" +
-					"    and MONTH(db_qlks.ORDER.DATE_ORDER) = %s"+
+					"    qlks_db.TYPE_ROOM.ID = qlks_db.ROOM.TYPE_ROOM_ID" +
+					"    and MONTH(qlks_db.ORDER.DATE_ORDER) = %s"+
 					" group by TYPE_ROOM.ID;", month) ;
 
 			// Thực thi câu lệnh SQL trả v�? đối tượng ResultSet.
@@ -443,6 +469,9 @@ public class RoomDAO {
 			ex.printStackTrace();
 		} catch (ClassNotFoundException ex) {
 			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}catch (Exception ex) {
+			// TODO: handle exception
 			ex.printStackTrace();
 		}
 
