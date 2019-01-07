@@ -3,6 +3,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Monitor;
+
+import javax.swing.ImageIcon;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
@@ -14,7 +17,9 @@ import utill.Utill;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.wb.swt.ResourceManager;
 
 public class Login {
 
@@ -54,6 +59,10 @@ public class Login {
 	    
 	    shell.setLocation(x, y);
 	    
+	    Label label = new Label(shell, SWT.NONE);
+	    label.setImage(org.eclipse.wb.swt.SWTResourceManager.getImage("/Users/hichi/Documents/GitHub/qlks_be/img/hdtv-96.png"));
+	    label.setBounds(10, 33, 107, 131);
+	    
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -66,39 +75,28 @@ public class Login {
 	 */
 	protected void createContents() {
 		shell = new Shell();
+		shell.setBackground(org.eclipse.wb.swt.SWTResourceManager.getColor(240, 248, 255));
 		shell.setSize(450, 300);
 		shell.setText("Đăng nhập");
 		
 		Label lblTnTiKhon = new Label(shell, SWT.NONE);
+		lblTnTiKhon.setImage(null);
 		lblTnTiKhon.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		lblTnTiKhon.setBounds(63, 49, 107, 19);
+		lblTnTiKhon.setBounds(130, 59, 107, 19);
 		lblTnTiKhon.setText("Tên tài khoản");
 		
 		text = new Text(shell, SWT.BORDER);
 		text.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		text.setBounds(176, 46, 169, 25);
+		text.setBounds(243, 56, 169, 25);
 		
 		Label lblMtKhu = new Label(shell, SWT.NONE);
 		lblMtKhu.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		lblMtKhu.setText("Mật khẩu");
-		lblMtKhu.setBounds(63, 78, 107, 19);
+		lblMtKhu.setBounds(130, 88, 107, 19);
 		
 		text_1 = new Text(shell, SWT.BORDER | SWT.PASSWORD);
 		text_1.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		text_1.setBounds(176, 78, 169, 25);
-		
-		Button btnGhiNhTi = new Button(shell, SWT.CHECK);
-		btnGhiNhTi.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		btnGhiNhTi.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				
-				Utill.SaveLogin(btnGhiNhTi.getSelection());
-			}
-		});
-		btnGhiNhTi.setSelection(Utill.GetSaveLogin());
-		btnGhiNhTi.setBounds(176, 103, 219, 18);
-		btnGhiNhTi.setText("Ghi nhớ tài khoản đăng nhập");
+		text_1.setBounds(243, 88, 169, 25);
 		
 		Button btnngNhp = new Button(shell, SWT.NONE);
 		btnngNhp.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
@@ -118,7 +116,7 @@ public class Login {
 			}
 			});
 
-		btnngNhp.setBounds(95, 143, 115, 40);
+		btnngNhp.setBounds(106, 157, 115, 40);
 		btnngNhp.setText("Đăng nhập");
 		
 		Button btnThot = new Button(shell, SWT.NONE);
@@ -130,7 +128,7 @@ public class Login {
 			}
 		});
 		btnThot.setText("Thoát");
-		btnThot.setBounds(230, 143, 115, 40);
+		btnThot.setBounds(241, 157, 115, 40);
 
 		checkSaveLogin();
 			

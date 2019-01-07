@@ -88,7 +88,7 @@ public class CreateReceiptOrder {
 
 		Label lblaCh = new Label(composite, SWT.NONE);
 		lblaCh.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		lblaCh.setText("�?ịa chỉ");
+		lblaCh.setText("Địa chỉ");
 		lblaCh.setBounds(10, 41, 116, 14);
 
 		Label lblKhchHng = new Label(composite, SWT.NONE);

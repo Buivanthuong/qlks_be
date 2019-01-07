@@ -29,6 +29,7 @@ import org.eclipse.swt.events.SelectionEvent;
 
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Monitor;
+import org.eclipse.wb.swt.ResourceManager;
 
 public class Dashboard {
 
@@ -91,26 +92,28 @@ public class Dashboard {
 		composite.setBounds(10, 10, 1004, 106);
 
 		lblNewLabel = new Label(composite, SWT.NONE);
+		lblNewLabel.setForeground(org.eclipse.wb.swt.SWTResourceManager.getColor(25, 25, 112));
 		lblNewLabel.setFont(SWTResourceManager.getFont("Arial", 20, SWT.BOLD));
-		lblNewLabel.setBounds(10, 10, 471, 30);
+		lblNewLabel.setBounds(109, 10, 471, 30);
 		lblNewLabel.setText("Khách sạn ABC");
 
 		lblaCh = new Label(composite, SWT.NONE);
 		lblaCh.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		lblaCh.setBounds(10, 46, 471, 20);
+		lblaCh.setBounds(109, 46, 471, 20);
 		lblaCh.setText("Địa chỉ: 123 Tô hiến thành, Quận 1, TP.HCM");
 
 		lblNhnVinBi = new Label(composite, SWT.NONE);
 		lblNhnVinBi.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
-		lblNhnVinBi.setBounds(10, 66, 276, 20);
+		lblNhnVinBi.setBounds(109, 66, 276, 20);
 		lblNhnVinBi.setText("Nhân viên: Bùi văn thương");
 
 		text = new Text(composite, SWT.BORDER);
 		text.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		text.setMessage("Tìm kiếm theo tên phòng ...");
-		text.setBounds(487, 41, 407, 25);
+		text.setBounds(590, 41, 270, 25);
 
 		Button btnTmKim = new Button(composite, SWT.NONE);
+		btnTmKim.setImage(org.eclipse.wb.swt.SWTResourceManager.getImage("/Users/hichi/Documents/GitHub/qlks_be/img/research-24.png"));
 		btnTmKim.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -119,13 +122,18 @@ public class Dashboard {
 			}
 		});
 		btnTmKim.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 11, SWT.NORMAL));
-		btnTmKim.setBounds(900, 39, 94, 30);
+		btnTmKim.setBounds(866, 39, 128, 30);
 		btnTmKim.setText("Tìm kiếm");
+		
+		Label label = new Label(composite, SWT.NONE);
+		label.setImage(org.eclipse.wb.swt.SWTResourceManager.getImage("/Users/hichi/Documents/GitHub/qlks_be/img/workstation-96.png"));
+		label.setBounds(10, 10, 83, 76);
 
 		Composite composite_1 = new Composite(shlQunLKhch, SWT.BORDER);
 		composite_1.setBounds(10, 122, 185, 446);
 
 		Button btnNewButton = new Button(composite_1, SWT.NONE);
+		btnNewButton.setImage(org.eclipse.wb.swt.SWTResourceManager.getImage("/Users/hichi/Documents/GitHub/qlks_be/img/hospital-24.png"));
 		btnNewButton.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -139,6 +147,7 @@ public class Dashboard {
 		btnNewButton.setText("Lập phiếu thuê phòng");
 
 		Button btnLpPhiuHo = new Button(composite_1, SWT.NONE);
+		btnLpPhiuHo.setImage(org.eclipse.wb.swt.SWTResourceManager.getImage("/Users/hichi/Documents/GitHub/qlks_be/img/cash_register-24.png"));
 		btnLpPhiuHo.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		btnLpPhiuHo.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -151,6 +160,7 @@ public class Dashboard {
 		btnLpPhiuHo.setBounds(10, 55, 165, 39);
 
 		Button btnToDanhMc = new Button(composite_1, SWT.NONE);
+		btnToDanhMc.setImage(org.eclipse.wb.swt.SWTResourceManager.getImage("/Users/hichi/Documents/GitHub/qlks_be/img/keyboard-24.png"));
 		btnToDanhMc.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		btnToDanhMc.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -164,6 +174,7 @@ public class Dashboard {
 		btnToDanhMc.setBounds(10, 100, 165, 39);
 
 		Button btnLpBoCo = new Button(composite_1, SWT.NONE);
+		btnLpBoCo.setImage(org.eclipse.wb.swt.SWTResourceManager.getImage("/Users/hichi/Documents/GitHub/qlks_be/img/device_manager-24.png"));
 		btnLpBoCo.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		btnLpBoCo.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -176,6 +187,7 @@ public class Dashboard {
 		btnLpBoCo.setBounds(10, 145, 165, 39);
 
 		Button btnDanhSchKhch = new Button(composite_1, SWT.NONE);
+		btnDanhSchKhch.setImage(org.eclipse.wb.swt.SWTResourceManager.getImage("/Users/hichi/Documents/GitHub/qlks_be/img/motion_detector-24.png"));
 		btnDanhSchKhch.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		btnDanhSchKhch.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -188,6 +200,7 @@ public class Dashboard {
 		btnDanhSchKhch.setBounds(10, 190, 165, 39);
 
 		Button btnThitLp = new Button(composite_1, SWT.NONE);
+		btnThitLp.setImage(org.eclipse.wb.swt.SWTResourceManager.getImage("/Users/hichi/Documents/GitHub/qlks_be/img/hammer-24.png"));
 		btnThitLp.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		btnThitLp.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -200,6 +213,7 @@ public class Dashboard {
 		btnThitLp.setBounds(10, 235, 165, 39);
 
 		Button btnThot = new Button(composite_1, SWT.NONE);
+		btnThot.setImage(org.eclipse.wb.swt.SWTResourceManager.getImage("/Users/hichi/Documents/GitHub/qlks_be/img/open_in_browser-24.png"));
 		btnThot.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		btnThot.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -216,6 +230,7 @@ public class Dashboard {
 		btnThot.setBounds(10, 280, 165, 39);
 
 		Button button = new Button(composite_1, SWT.NONE);
+		button.setImage(org.eclipse.wb.swt.SWTResourceManager.getImage("/Users/hichi/Documents/GitHub/qlks_be/img/button-24.png"));
 		button.setFont(SWTResourceManager.getFont("Arial", 11, SWT.NORMAL));
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -235,6 +250,7 @@ public class Dashboard {
 		lblNewLabel_1.setText("Danh sách phòng");
 		Button btnNewButton_2 = new Button(composite_2, SWT.NONE);
 		Button btnNewButton_3 = new Button(composite_2, SWT.NONE);
+		btnNewButton_3.setForeground(org.eclipse.wb.swt.SWTResourceManager.getColor(165, 42, 42));
 		Button btnNewButton_1 = new Button(composite_2, SWT.BOLD);
 		btnNewButton_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
@@ -281,8 +297,9 @@ public class Dashboard {
 		btnNewButton_3.setText("Có khách");
 
 		Label lblThiGianam = new Label(composite_2, SWT.NONE);
+		lblThiGianam.setImage(org.eclipse.wb.swt.SWTResourceManager.getImage("/Users/hichi/Documents/GitHub/qlks_be/img/dashboard-24.png"));
 		lblThiGianam.setFont(SWTResourceManager.getFont("Arial", 11, SWT.BOLD));
-		lblThiGianam.setBounds(615, 10, 186, 14);
+		lblThiGianam.setBounds(590, 10, 186, 14);
 		lblThiGianam.setText("Thời gian: 12:20AM");
 
 		Composite composite_3 = new Composite(shlQunLKhch, SWT.BORDER);
@@ -294,6 +311,7 @@ public class Dashboard {
 		scrolledComposite.setExpandVertical(true);
 
 		composite_4 = new Composite(scrolledComposite, SWT.NONE);
+		composite_4.setBackground(org.eclipse.wb.swt.SWTResourceManager.getColor(240, 248, 255));
 		scrolledComposite.setContent(composite_4);
 		scrolledComposite.setMinSize(composite_4.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		selectRoom();
@@ -344,13 +362,26 @@ public class Dashboard {
 		ArrayList<Room> lsOb = RoomBUS.selectRoom( STATUS, tx );
 		int size = 0;
 		int row = -1;
+		
 		for (Room ob : lsOb) {
+			Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
+			btnNewButton_4.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if(ob.getSTATUS_ROOM() == 2) {
+						CreateReceiptOrder cr = new CreateReceiptOrder();
+						cr.open();
+					}else {
+						CreateOrderRoom cr = new CreateOrderRoom();
+						cr.open();
+					}
+				}
+			});
 			if(STATUS == 0 || STATUS ==3) {
 				if(size % 5 == 0) {
 					row ++;
 					size = 0;
 				}
-				Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
 				btnNewButton_4.setBounds(10 +(150 * size), 10 + (95 * row) , 145, 86);
 				btnNewButton_4.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 11, SWT.NORMAL));
 				btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\nĐơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
@@ -364,7 +395,6 @@ public class Dashboard {
 					row ++;
 					size = 0;
 				}
-				Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
 				btnNewButton_4.setBounds(10 +(150 * size), 10 + (95 * row) , 145, 86);
 				btnNewButton_4.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 11, SWT.NORMAL));
 				btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\nĐơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
@@ -378,7 +408,6 @@ public class Dashboard {
 					row ++;
 					size = 0;
 				}
-				Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
 				btnNewButton_4.setBounds(10 +(150 * size), 10 + (95 * row) , 145, 86);
 				btnNewButton_4.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 11, SWT.NORMAL));
 				btnNewButton_4.setText("Phòng : "+ob.getNAME()+"\n"+ob.getTYPE()+"\nĐơn giá: "+ob.getPRICE()+"đ\nTrạng thái: "+(ob.getSTATUS_ROOM() == 2?"Có khách":"Trống"));
